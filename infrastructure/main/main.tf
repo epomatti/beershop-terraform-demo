@@ -141,24 +141,29 @@ resource "azurerm_app_service_plan" "functions" {
 
 # Web Apps
 
-# resource "azurerm_app_service" "api" {
-#   name                = "app-beershop-${local.env.suffix}"
-#   resource_group_name = azurerm_resource_group.default.name
-#   location            = azurerm_resource_group.default.location
-#   app_service_plan_id = azurerm_app_service_plan.api.id
+resource "azurerm_app_service" "api" {
+  name                = "app-beershop-${local.env.suffix}"
+  resource_group_name = azurerm_resource_group.default.name
+  location            = azurerm_resource_group.default.location
+  app_service_plan_id = azurerm_app_service_plan.api.id
 
-#   app_settings = {
-#     DOCKER_ENABLE_CI                    = true
-#     WEBSITES_ENABLE_APP_SERVICE_STORAGE = false
-#     DOCKER_REGISTRY_SERVER_URL          = "https://beershop.azurecr.io"
-#     DOCKER_REGISTRY_SERVER_USERNAME     = "beershop"
-#     DOCKER_REGISTRY_SERVER_PASSWORD     = var.ACR_ADMIN_PASSWORD
-#   }
+  app_settings = {
+    DOCKER_ENABLE_CI                                = true
+    WEBSITES_ENABLE_APP_SERVICE_STORAGE             = false
+    DOCKER_REGISTRY_SERVER_URL                      = "https://beershop.azurecr.io"
+    DOCKER_REGISTRY_SERVER_USERNAME                 = "beershop"
+    DOCKER_REGISTRY_SERVER_PASSWORD                 = var.ACR_ADMIN_PASSWORD
+    # application variables
+    BEERSHOP_SQLSERVER_PASSWORD                     = var.SQLSERVER_ADMIN_PASSWORD
+    BEERSHOP_SERVICEBUS_PRIMARY_CONNECTION_STRING   = azurerm_servicebus_queue_authorization_rule.api.primary_connection_string
+    BEERSHOP_SERVICEBUS_SECONDARY_CONNECTION_STRING = azurerm_servicebus_queue_authorization_rule.api.secondary_connection_string
+    BEERSHOP_SERVICEBUS_CONNECTION_STRING           = local.env.app_api_servicebus_connection_string
+  }
 
-#   site_config {
-#     linux_fx_version = "DOCKER|beershop.azurecr.io/beershop-api:${local.env.suffix}"
-#     always_on        = local.env.app_api_alwayson
-#   }
+  site_config {
+    linux_fx_version = "DOCKER|beershop.azurecr.io/beershop-api:${local.env.suffix}"
+    always_on        = local.env.app_api_alwayson
+  }
 
-#   tags = local.env.tags
-# }
+  tags = local.env.tags
+}

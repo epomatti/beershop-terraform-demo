@@ -22,6 +22,8 @@ plan_functions_sku: B1
 
 # Web Apps
 app_api_alwayson: false
+app_api_servicebus_connection_string: primary
+
 
 # Tags
 tags:
