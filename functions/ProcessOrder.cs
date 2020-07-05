@@ -17,7 +17,7 @@ namespace functions
             using (SqlConnection conn = new SqlConnection(str))
             {
                 conn.Open();
-                var text = "SELECT 1";
+                var text = "SELECT * from Orders";
 
                 using (SqlCommand cmd = new SqlCommand(text, conn))
                 {
@@ -25,7 +25,8 @@ namespace functions
                     {
                         if (reader.Read())
                         {
-                            Console.WriteLine(reader);
+                            Console.WriteLine(reader["Beer"]);
+                            Console.WriteLine(reader["Processed"]);
                         }
                     }
                 }
