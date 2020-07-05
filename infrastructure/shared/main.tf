@@ -3,19 +3,31 @@ provider "azurerm" {
   }
 }
 
-resource "azurerm_container_registry" "default" {
-
-  name                = "beershop"
-  resource_group_name = "beershop"
-  location            = "brazilsouth"
-  sku                 = "Basic"
-  admin_enabled       = true
-
+locals {
+  location = "East US 2"
   tags = {
     environment       = "shared"
     product           = "beershop"
   }
+}
 
+resource "azurerm_resource_group" "beershop" {
+  name     = "beershop-shared"
+  location = local.location
+  tags     = local.tags
+}
+
+
+resource "azurerm_container_registry" "default" {
+  name                = "beershop"
+  resource_group_name = "beershop"
+  location            = local.location
+  sku                 = "Basic"
+  admin_enabled       = true
+  tags = {
+    environment       = "shared"
+    product           = "beershop"
+  }
 }
 
 output "acr_admin_password" {
