@@ -12,6 +12,10 @@ variable "ACR_ADMIN_PASSWORD" {
   type = string
 }
 
+variable "SQLSERVER_ADMIN_PASSWORD_DEVELOPMENT" {
+  type = string
+}
+
 variable "ARM_CLIENT_ID" {
   type = string
 }
