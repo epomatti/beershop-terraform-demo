@@ -30,7 +30,7 @@ resource "azurerm_resource_group" "default" {
 # Storage Account
 
 resource "azurerm_storage_account" "default" {
-  name                     = "st-beershop-${local.env.suffix}"
+  name                     = "stbeershop${local.env.suffix}"
   location                 = azurerm_resource_group.default.location
   resource_group_name      = azurerm_resource_group.default.name
   account_tier             = "Standard"
@@ -78,3 +78,18 @@ resource "azurerm_servicebus_queue_authorization_rule" "functions" {
   send   = false
   manage = false
 }
+
+# App Service Plans
+
+# resource "azurerm_app_service_plan" "linuxplan" {
+#   name                = "plan-maibeer-${local.env.suffix}"
+#   location            = local.env.location
+#   resource_group_name = local.env.resource_group_name
+#   kind                = "Linux"
+#   reserved            = true
+#   sku {
+#     tier = "Basic"
+#     size = "B1"
+#   }
+#   tags = local.tags
+# }
