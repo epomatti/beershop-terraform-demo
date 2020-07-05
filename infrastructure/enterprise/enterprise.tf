@@ -26,7 +26,7 @@ resource "tfe_workspace" "workspaces" {
   working_directory  = "infrastructure/shared"
 
   vcs_repo {
-      identifier     = "epomatti/beershop-demo"
+      identifier     = "epomatti/beershop-terraform-demo"
       oauth_token_id = var.OAUTH_TOKEN_ID
       branch         = local.env.branches[count.index]
   }
