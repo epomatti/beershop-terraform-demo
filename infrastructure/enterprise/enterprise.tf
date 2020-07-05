@@ -8,6 +8,10 @@ variable "OAUTH_TOKEN_ID" {
   type = string
 }
 
+variable "ACR_ADMIN_PASSWORD" {
+  type = string
+}
+
 variable "ARM_CLIENT_ID" {
   type = string
 }
@@ -46,6 +50,16 @@ resource "tfe_workspace" "workspaces" {
       branch         = local.env.branches[count.index]
   }
 
+}
+
+# ACR
+resource "tfe_variable" "ACR_ADMIN_PASSWORD" {
+  count        = length(tfe_workspace.workspaces)
+  key          = "ACR_ADMIN_PASSWORD" 
+  value        = var.ACR_ADMIN_PASSWORD
+  category     = "env"
+  workspace_id = tfe_workspace.workspaces[count.index].id
+  sensitive    = true
 }
 
 # Azure ARM Provider
