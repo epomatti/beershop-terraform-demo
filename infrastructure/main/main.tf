@@ -35,7 +35,7 @@ resource "azurerm_resource_group" "default" {
   lifecycle {
     prevent_destroy = true
   }
-  
+
 }
 
 
@@ -104,7 +104,7 @@ resource "azurerm_servicebus_queue" "orders" {
 resource "azurerm_servicebus_queue_authorization_rule" "api" {
   name                = "api-permissions"
   namespace_name      = azurerm_servicebus_namespace.default.name
-  queue_name          = "sbq-orders"
+  queue_name          = azurerm_servicebus_queue.orders.name
   resource_group_name = azurerm_resource_group.default.name
 
   listen = false
@@ -115,7 +115,7 @@ resource "azurerm_servicebus_queue_authorization_rule" "api" {
 resource "azurerm_servicebus_queue_authorization_rule" "functions" {
   name                = "functions-permissions"
   namespace_name      = azurerm_servicebus_namespace.default.name
-  queue_name          = "sbq-orders"
+  queue_name          = azurerm_servicebus_queue.orders.name
   resource_group_name = azurerm_resource_group.default.name
 
   listen = true
