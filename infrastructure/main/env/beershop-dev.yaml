@@ -9,4 +9,6 @@ servicebus_sku: Basic
 servicebus_order_queuename: orders
 
 # Tags
-tags: [ beershop, development]
+tags:
+  system: beershop
+  envivonment: development
