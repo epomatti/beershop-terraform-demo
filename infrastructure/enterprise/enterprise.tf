@@ -8,6 +8,10 @@ variable "OAUTH_TOKEN_ID" {
   type = string
 }
 
+variable "ARM_CLIENT_ID" {
+  type = string
+}
+
 locals {
   organization = "beershop"
   env = merge(
@@ -15,8 +19,8 @@ locals {
   )
 }
 
-resource "tfe_workspace" "beershop-shared" {
-  count              = 1
+resource "tfe_workspace" "workspaces" {
+  count              = length(local.env.workspaces)
   name               = local.env.workspaces[count.index]
   organization       = local.organization
   working_directory  = "infrastructure/shared"
@@ -27,4 +31,13 @@ resource "tfe_workspace" "beershop-shared" {
       branch         = local.env.branches[count.index]
   }
 
+}
+
+resource "tfe_variable" "variables" {
+  count        = length(tfe_workspace.workspaces)
+  key          = "ARM_CLIENT_ID" 
+  value        = var.ARM_CLIENT_ID
+  category     = "terraform"
+  workspace_id = tfe_workspace.workspaces[count.index].id
+  sensitive    = true
 }
