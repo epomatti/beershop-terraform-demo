@@ -180,16 +180,17 @@ resource "azurerm_function_app" "beershop" {
   version                    = "~3"
 
   app_settings = {
-    "APPINSIGHTS_INSTRUMENTATIONKEY"      = azurerm_application_insights.functions.instrumentation_key
-    "WEBSITES_ENABLE_APP_SERVICE_STORAGE" = false
-    "DOCKER_REGISTRY_SERVER_URL"          = "https://beershop.azurecr.io"
-    "DOCKER_REGISTRY_SERVER_USERNAME"     = "beershop"
-    "DOCKER_REGISTRY_SERVER_PASSWORD"     = var.ACR_ADMIN_PASSWORD
+    APPINSIGHTS_INSTRUMENTATIONKEY      = azurerm_application_insights.functions.instrumentation_key
+    WEBSITES_ENABLE_APP_SERVICE_STORAGE = false
+    DOCKER_REGISTRY_SERVER_URL          = "https://beershop.azurecr.io"
+    DOCKER_REGISTRY_SERVER_USERNAME     = "beershop"
+    DOCKER_REGISTRY_SERVER_PASSWORD     = var.ACR_ADMIN_PASSWORD
     #"WEBSITE_RUN_FROM_PACKAGE"            = "ThisWillBeSetToAnURLByAzureDevOpsDeploy", // managed by Azure DevOps (must be not null)
     #"WEBSITE_ENABLE_SYNC_UPDATE_SITE"     = "true"                                     // managed by Azure DevOps (must be not null)
     # beershop variables
-    BEERSHOP_SQLSERVER_PASSWORD           = var.SQLSERVER_ADMIN_PASSWORD
-    AzureWebJobsServiceBus                = azurerm_servicebus_namespace.default.default_primary_connection_string
+    BEERSHOP_SQLSERVER_PASSWORD         = var.SQLSERVER_ADMIN_PASSWORD
+    AzureWebJobsServiceBus              = azurerm_servicebus_namespace.default.default_primary_connection_string
+    sqldb_connection                    = "Server=tcp:${azurerm_sql_server.default.name}.database.windows.net,1433;Initial Catalog=${azurerm_sql_database.default.name};Persist Security Info=False;User ID=beershop;Password=${azurerm_sql_server.default.administrator_login_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
   }
 
   site_config {
