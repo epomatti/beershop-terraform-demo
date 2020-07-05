@@ -14,14 +14,14 @@ locals {
 
 resource "tfe_workspace" "beershop-shared" {
   count              = 1
-  name               = local.workspaces[${count.index}]
+  name               = local.env.workspaces[${count.index}]
   organization       = local.organization
   working_directory  = "infrastructure/enterprise"
 
   vcs_repo {
       identifier     = "epomatti/beershop-demo"
       oauth_token_id = var.OAUTH_TOKEN_ID
-      branch         = local.branches[${count.index}]
+      branch         = local.env.branches[${count.index}]
   }
 
 }
