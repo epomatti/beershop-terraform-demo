@@ -81,15 +81,32 @@ resource "azurerm_servicebus_queue_authorization_rule" "functions" {
 
 # App Service Plans
 
-# resource "azurerm_app_service_plan" "linuxplan" {
-#   name                = "plan-maibeer-${local.env.suffix}"
-#   location            = local.env.location
-#   resource_group_name = local.env.resource_group_name
-#   kind                = "Linux"
-#   reserved            = true
-#   sku {
-#     tier = "Basic"
-#     size = "B1"
-#   }
-#   tags = local.tags
-# }
+resource "azurerm_app_service_plan" "api" {
+  name                = "plan-beershop-api-${local.env.suffix}"
+  location            = azurerm_resource_group.default.location
+  resource_group_name = azurerm_resource_group.default.name
+  kind                = "Linux"
+  reserved            = true
+
+  sku {
+    tier = local.env.plan_api_tier
+    size = local.env.plan_api_sku
+  }
+
+  tags = local.env.tags
+}
+
+resource "azurerm_app_service_plan" "functions" {
+  name                = "plan-beershop-functions-${local.env.suffix}"
+  location            = azurerm_resource_group.default.location
+  resource_group_name = azurerm_resource_group.default.name
+  kind                = "Linux"
+  reserved            = true
+
+  sku {
+    tier = local.env.plan_api_tier
+    size = local.env.plan_api_sku
+  }
+
+  tags = local.env.tags
+}

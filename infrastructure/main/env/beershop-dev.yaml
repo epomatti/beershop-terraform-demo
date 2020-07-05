@@ -11,6 +11,12 @@ st_replication: "LRS"
 bus_sku: Basic
 bus_queue_order_name: sbq-orders
 
+# App Plans
+plan_api_tier: Basic
+plan_api_sku: B1
+plan_functions_tier: Basic
+plan_functions_sku: B1
+
 # Tags
 tags:
   system: beershop
