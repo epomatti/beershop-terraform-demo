@@ -4,7 +4,6 @@ terraform {
   }
 }
 
-
 locals {
   organization = "beershop"
   env = merge(
@@ -14,14 +13,14 @@ locals {
 
 resource "tfe_workspace" "beershop-shared" {
   count              = 1
-  name               = local.env.workspaces[${count.index}]
+  name               = local.env.workspaces[count.index]
   organization       = local.organization
-  working_directory  = "infrastructure/enterprise"
+  working_directory  = "infrastructure/shared"
 
   vcs_repo {
       identifier     = "epomatti/beershop-demo"
       oauth_token_id = var.OAUTH_TOKEN_ID
-      branch         = local.env.branches[${count.index}]
+      branch         = local.env.branches[count.index]
   }
 
 }
