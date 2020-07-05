@@ -8,9 +8,10 @@ namespace functions
     public static class ProcessOrder
     {
         [FunctionName("ProcessOrder")]
-        public static void Run([ServiceBusTrigger("myqueue", Connection = "")]string myQueueItem, ILogger log)
+        public static void Run([ServiceBusTrigger("orders")]string order, ILogger log)
         {
-            log.LogInformation($"C# ServiceBus queue trigger function processed message: {myQueueItem}");
+            
+            log.LogInformation($"C# ServiceBus queue trigger function processed message: {order}");
         }
     }
 }
