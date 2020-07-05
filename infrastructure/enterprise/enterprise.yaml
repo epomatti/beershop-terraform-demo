@@ -1,0 +1,2 @@
+workspaces: [ beershop-shared ]
+branches: [ master ]
