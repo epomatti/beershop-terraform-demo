@@ -31,6 +31,11 @@ resource "azurerm_resource_group" "default" {
   name     = "beershop-${local.env.suffix}"
   location = local.env.rg_location
   tags     = local.env.tags
+
+  lifecycle {
+    prevent_destroy = true
+  }
+  
 }
 
 
@@ -57,9 +62,9 @@ resource "azurerm_sql_server" "default" {
   administrator_login          = "beershop"
   administrator_login_password = var.SQLSERVER_ADMIN_PASSWORD
 
-  # lifecycle {
-  #   prevent_destroy = true
-  # }
+  lifecycle {
+    prevent_destroy = true
+  }
 
   tags = local.env.tags
 }
@@ -71,9 +76,9 @@ resource "azurerm_sql_database" "default" {
   server_name         = azurerm_sql_server.default.name
   edition             = local.env.sqldb_edition
 
-  # lifecycle {
-  #   prevent_destroy = true
-  # }
+  lifecycle {
+    prevent_destroy = true
+  }
 
   tags = local.env.tags
 }
