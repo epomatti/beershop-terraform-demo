@@ -12,19 +12,25 @@ namespace app.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private MasterContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, MasterContext context)
         {
             _logger = logger;
+            this._context = context;
         }
 
         public IActionResult Index()
         {
+            List<Beer> beers = _context.Beers.ToList();
+            ViewData["Beers"] = beers;
             return View();
         }
 
         public IActionResult Orders()
         {
+            List<Order> orders = _context.Orders.ToList();
+            ViewData["Orders"] = orders;
             return View();
         }
 
@@ -32,6 +38,35 @@ namespace app.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [HttpPost]
+        public IActionResult Buy(Beer beer)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    var order = new Order
+                    {
+                        Beer = beer,
+                        Processed = false
+                    };
+                    _context.Orders.Add(order);
+                    _context.SaveChanges();
+                    return RedirectToAction(nameof(Orders));
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.ToString());
+                //Log the error (uncomment ex variable name and write a log.
+                ModelState.AddModelError("", "Unable to save changes. " +
+                    "Try again, and if the problem persists " +
+                    "see your system administrator.");
+            }
+
+            return RedirectToAction(nameof(Orders));
         }
     }
 }

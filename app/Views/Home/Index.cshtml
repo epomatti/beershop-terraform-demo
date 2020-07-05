@@ -1,8 +1,18 @@
-﻿@{
+﻿@model app.Beer
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Order your beer</h1>
+
+    @foreach (var beer in ViewData["Beers"] as IEnumerable<app.Beer>) {
+        
+        @using (Html.BeginForm("Buy", "Home", FormMethod.Post)) {
+
+            @Html.HiddenFor(beer => beer.Id)
+            <input type="submit" value="Buy"/>
+        }
+    }
+
 </div>
