@@ -31,10 +31,34 @@ resource "azurerm_resource_group" "default" {
 
 resource "azurerm_storage_account" "default" {
   name                     = "stbeershop${local.env.suffix}"
-  location                 = azurerm_resource_group.default.location
   resource_group_name      = azurerm_resource_group.default.name
+  location                 = azurerm_resource_group.default.location
   account_tier             = "Standard"
   account_replication_type = local.env.st_replication
+
+  tags = local.env.tags
+}
+
+
+# SQL Server
+
+resource "azurerm_sql_server" "default" {
+  name                         = "sql-beershop-${local.env.suffix}"
+  resource_group_name          = azurerm_resource_group.default.name
+  location                     = azurerm_resource_group.default.location
+  version                      = "12.0"
+  administrator_login          = "beershop"
+  administrator_login_password = var.SQL_SERVER_ADMINISTRATOR_LOGIN_PASSWORD
+
+  tags = local.env.tags
+}
+
+resource "azurerm_sql_database" "default" {
+  name                = "sqldb-beershop-${local.env.suffix}"
+  resource_group_name = azurerm_resource_group.default.name
+  location            = azurerm_resource_group.default.location
+  server_name         = azurerm_sql_server.default.name
+  edition             = local.env.sqldb_edition
 
   tags = local.env.tags
 }
@@ -44,8 +68,8 @@ resource "azurerm_storage_account" "default" {
 
 resource "azurerm_servicebus_namespace" "default" {
   name                = "bus-beershop-${local.env.suffix}"
-  location            = azurerm_resource_group.default.location
   resource_group_name = azurerm_resource_group.default.name
+  location            = azurerm_resource_group.default.location
   sku                 = local.env.bus_sku
 
   tags = local.env.tags
@@ -83,8 +107,8 @@ resource "azurerm_servicebus_queue_authorization_rule" "functions" {
 
 resource "azurerm_app_service_plan" "api" {
   name                = "plan-beershop-api-${local.env.suffix}"
-  location            = azurerm_resource_group.default.location
   resource_group_name = azurerm_resource_group.default.name
+  location            = azurerm_resource_group.default.location
   kind                = "Linux"
   reserved            = true
 
@@ -98,8 +122,8 @@ resource "azurerm_app_service_plan" "api" {
 
 resource "azurerm_app_service_plan" "functions" {
   name                = "plan-beershop-functions-${local.env.suffix}"
-  location            = azurerm_resource_group.default.location
   resource_group_name = azurerm_resource_group.default.name
+  location            = azurerm_resource_group.default.location
   kind                = "Linux"
   reserved            = true
 

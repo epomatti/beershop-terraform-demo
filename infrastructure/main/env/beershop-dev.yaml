@@ -7,6 +7,9 @@ rg_location: eastus2
 # Storage Account
 st_replication: "LRS"
 
+# SQL Server
+sqldb_edition: Free
+
 # Service Bus
 bus_sku: Basic
 bus_queue_order_name: sbq-orders
