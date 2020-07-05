@@ -57,7 +57,7 @@ resource "tfe_variable" "ACR_ADMIN_PASSWORD" {
   count        = length(tfe_workspace.workspaces)
   key          = "ACR_ADMIN_PASSWORD" 
   value        = var.ACR_ADMIN_PASSWORD
-  category     = "env"
+  category     = "terraform"
   workspace_id = tfe_workspace.workspaces[count.index].id
   sensitive    = true
 }
