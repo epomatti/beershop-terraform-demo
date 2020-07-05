@@ -33,7 +33,7 @@ resource "azurerm_resource_group" "default" {
 resource "azurerm_servicebus_namespace" "default" {
   name                = "bus-beershop-${local.env.suffix}"
   resource_group_name = azurerm_resource_group.default.name
-  location            = azurerm_resource_group.default.localtion
+  location            = azurerm_resource_group.default.location
   sku                 = local.env.servicebus_sku
 
   tags     = local.env.tags
