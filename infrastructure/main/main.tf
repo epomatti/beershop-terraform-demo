@@ -49,7 +49,7 @@ resource "azurerm_servicebus_queue_authorization_rule" "api" {
   name                = "api-permissions"
   namespace_name      = azurerm_servicebus_namespace.default.name
   queue_name          = local.env.servicebus_order_queuename
-  resource_group_name = local.env.rg_name
+  resource_group_name = azurerm_resource_group.default.name
 
   listen = false
   send   = true
@@ -60,7 +60,7 @@ resource "azurerm_servicebus_queue_authorization_rule" "functions" {
   name                = "functions-permissions"
   namespace_name      = azurerm_servicebus_namespace.default.name
   queue_name          = local.env.servicebus_order_queuename
-  resource_group_name = local.env.rg_name
+  resource_group_name = azurerm_resource_group.default.name
 
   listen = true
   send   = false
