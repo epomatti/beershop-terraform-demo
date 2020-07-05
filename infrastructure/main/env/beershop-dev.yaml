@@ -12,7 +12,6 @@ sqldb_edition: Basic
 
 # Service Bus
 bus_sku: Basic
-bus_queue_order_name: sbq-orders
 
 # App Plans
 plan_api_tier: Basic
@@ -24,6 +23,8 @@ plan_functions_sku: B1
 app_api_alwayson: false
 app_api_servicebus_connection_string: primary
 
+# Functions
+functions_alwayson: false
 
 # Tags
 tags:
