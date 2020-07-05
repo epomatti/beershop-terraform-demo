@@ -3,7 +3,7 @@ branches:
   - master
 working_directories: 
   - infrastructure/shared
-  - infrastructure/dev
+  - infrastructure/main
 workspaces: 
   - beershop-shared
   - beershop-dev
