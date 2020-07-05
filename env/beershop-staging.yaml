@@ -1,0 +1,5 @@
+# Concat this at the end of resource names
+suffix: "staging"
+
+# Resource group
+location: "brazilsouth"
