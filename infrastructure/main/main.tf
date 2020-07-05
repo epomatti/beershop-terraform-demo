@@ -57,9 +57,9 @@ resource "azurerm_sql_server" "default" {
   administrator_login          = "beershop"
   administrator_login_password = var.SQLSERVER_ADMIN_PASSWORD
 
-  lifecycle {
-    prevent_destroy = true
-  }
+  # lifecycle {
+  #   prevent_destroy = true
+  # }
 
   tags = local.env.tags
 }
@@ -71,9 +71,9 @@ resource "azurerm_sql_database" "default" {
   server_name         = azurerm_sql_server.default.name
   edition             = local.env.sqldb_edition
 
-  lifecycle {
-    prevent_destroy = true
-  }
+  # lifecycle {
+  #   prevent_destroy = true
+  # }
 
   tags = local.env.tags
 }
@@ -161,7 +161,6 @@ resource "azurerm_app_service" "api" {
   app_service_plan_id = azurerm_app_service_plan.api.id
 
   app_settings = {
-    DOCKER_ENABLE_CI                                = true
     WEBSITES_ENABLE_APP_SERVICE_STORAGE             = false
     DOCKER_REGISTRY_SERVER_URL                      = "https://beershop.azurecr.io"
     DOCKER_REGISTRY_SERVER_USERNAME                 = "beershop"
