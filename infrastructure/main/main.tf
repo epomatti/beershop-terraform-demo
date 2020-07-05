@@ -3,7 +3,6 @@ provider "azurerm" {
   }
 }
 
-
 # Variables
 
 variable "TFC_WORKSPACE_NAME" {
@@ -24,7 +23,6 @@ locals {
   )
 }
 
-
 # Resource Group
 
 resource "azurerm_resource_group" "default" {
@@ -38,7 +36,6 @@ resource "azurerm_resource_group" "default" {
 
 }
 
-
 # Storage Account
 
 resource "azurerm_storage_account" "default" {
@@ -50,7 +47,6 @@ resource "azurerm_storage_account" "default" {
 
   tags = local.env.tags
 }
-
 
 # SQL Server
 
@@ -83,7 +79,6 @@ resource "azurerm_sql_database" "default" {
   tags = local.env.tags
 }
 
-
 # Service Bus
 
 resource "azurerm_servicebus_namespace" "default" {
@@ -95,36 +90,11 @@ resource "azurerm_servicebus_namespace" "default" {
   tags = local.env.tags
 }
 
-# default_primary_connection_string 
-
 resource "azurerm_servicebus_queue" "orders" {
   name                = "sbq-orders"
   resource_group_name = azurerm_resource_group.default.name
   namespace_name      = azurerm_servicebus_namespace.default.name
 }
-
-resource "azurerm_servicebus_queue_authorization_rule" "api" {
-  name                = "api-permissions"
-  namespace_name      = azurerm_servicebus_namespace.default.name
-  queue_name          = azurerm_servicebus_queue.orders.name
-  resource_group_name = azurerm_resource_group.default.name
-
-  listen = false
-  send   = true
-  manage = false
-}
-
-resource "azurerm_servicebus_queue_authorization_rule" "functions" {
-  name                = "functions-permissions"
-  namespace_name      = azurerm_servicebus_namespace.default.name
-  queue_name          = azurerm_servicebus_queue.orders.name
-  resource_group_name = azurerm_resource_group.default.name
-
-  listen = true
-  send   = false
-  manage = false
-}
-
 
 # App Service Plans
 
@@ -158,7 +128,6 @@ resource "azurerm_app_service_plan" "functions" {
   tags = local.env.tags
 }
 
-
 # Web Apps
 
 resource "azurerm_app_service" "api" {
@@ -174,8 +143,8 @@ resource "azurerm_app_service" "api" {
     DOCKER_REGISTRY_SERVER_PASSWORD                 = var.ACR_ADMIN_PASSWORD
     # beershop variables
     BEERSHOP_SQLSERVER_PASSWORD                     = var.SQLSERVER_ADMIN_PASSWORD
-    BEERSHOP_SERVICEBUS_PRIMARY_CONNECTION_STRING   = azurerm_servicebus_queue_authorization_rule.api.primary_connection_string
-    BEERSHOP_SERVICEBUS_SECONDARY_CONNECTION_STRING = azurerm_servicebus_queue_authorization_rule.api.secondary_connection_string
+    BEERSHOP_SERVICEBUS_PRIMARY_CONNECTION_STRING   = azurerm_servicebus_namespace.api.default_primary_connection_string
+    BEERSHOP_SERVICEBUS_SECONDARY_CONNECTION_STRING = azurerm_servicebus_namespace.api.default_secondary_connection_string
     BEERSHOP_SERVICEBUS_CONNECTION_STRING           = local.env.app_api_servicebus_connection_string
   }
 
@@ -187,7 +156,6 @@ resource "azurerm_app_service" "api" {
   tags = local.env.tags
 }
 
-
 # Application Insights
 
 resource "azurerm_application_insights" "functions" {
@@ -198,7 +166,6 @@ resource "azurerm_application_insights" "functions" {
 
   tags = local.env.tags
 }
-
 
 # Functions
 
