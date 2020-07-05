@@ -1,12 +1,15 @@
 # Concat this at the end of resource names
 suffix: dev
 
-# Resource group
+# Resource Group
 rg_location: eastus2
 
+# Storage Account
+st_replication: "LRS"
+
 # Service Bus
-servicebus_sku: Basic
-servicebus_order_queuename: orders
+bus_sku: Basic
+bus_queue_order_name: sbq-orders
 
 # Tags
 tags:

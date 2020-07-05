@@ -27,20 +27,32 @@ resource "azurerm_resource_group" "default" {
   tags     = local.env.tags
 }
 
+# Storage Account
+
+resource "azurerm_storage_account" "default" {
+  name                     = "st-beershop-${local.env.suffix}"
+  location                 = azurerm_resource_group.default.location
+  resource_group_name      = azurerm_resource_group.default.name
+  account_tier             = "Standard"
+  account_replication_type = local.env.st_replication
+
+  tags = local.env.tags
+}
+
 
 # Service Bus
 
 resource "azurerm_servicebus_namespace" "default" {
   name                = "bus-beershop-${local.env.suffix}"
-  resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
-  sku                 = local.env.servicebus_sku
+  resource_group_name = azurerm_resource_group.default.name
+  sku                 = local.env.bus_sku
 
-  tags     = local.env.tags
+  tags = local.env.tags
 }
 
 resource "azurerm_servicebus_queue" "orders" {
-  name                = local.env.servicebus_order_queuename
+  name                = local.env.bus_queue_order_name
   resource_group_name = azurerm_resource_group.default.name
   namespace_name      = azurerm_servicebus_namespace.default.name
 }
@@ -48,7 +60,7 @@ resource "azurerm_servicebus_queue" "orders" {
 resource "azurerm_servicebus_queue_authorization_rule" "api" {
   name                = "api-permissions"
   namespace_name      = azurerm_servicebus_namespace.default.name
-  queue_name          = local.env.servicebus_order_queuename
+  queue_name          = local.env.bus_queue_order_name
   resource_group_name = azurerm_resource_group.default.name
 
   listen = false
@@ -59,7 +71,7 @@ resource "azurerm_servicebus_queue_authorization_rule" "api" {
 resource "azurerm_servicebus_queue_authorization_rule" "functions" {
   name                = "functions-permissions"
   namespace_name      = azurerm_servicebus_namespace.default.name
-  queue_name          = local.env.servicebus_order_queuename
+  queue_name          = local.env.bus_queue_order_name
   resource_group_name = azurerm_resource_group.default.name
 
   listen = true
