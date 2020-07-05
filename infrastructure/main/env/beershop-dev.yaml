@@ -1,5 +1,12 @@
 # Concat this at the end of resource names
-suffix: "staging"
+suffix: dev
 
 # Resource group
-location: "brazilsouth"
+rg_location: eastus2
+
+# Service Bus
+servicebus_sku: Basic
+servicebus_order_queuename: orders
+
+# Tags
+tags: [ beershop, development]
