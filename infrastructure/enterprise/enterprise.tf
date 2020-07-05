@@ -52,6 +52,7 @@ resource "tfe_workspace" "workspaces" {
 
 }
 
+
 # ACR
 resource "tfe_variable" "ACR_ADMIN_PASSWORD" {
   count        = length(tfe_workspace.workspaces)
@@ -59,6 +60,17 @@ resource "tfe_variable" "ACR_ADMIN_PASSWORD" {
   value        = var.ACR_ADMIN_PASSWORD
   category     = "terraform"
   workspace_id = tfe_workspace.workspaces[count.index].id
+  sensitive    = true
+}
+
+
+# SQL Server
+
+resource "tfe_variable" "SQLSERVER_ADMIN_PASSWORD_DEVELOPMENT" {
+  key          = "SQLSERVER_ADMIN_PASSWORD" 
+  value        = var.SQLSERVER_ADMIN_PASSWORD_DEVELOPMENT
+  category     = "env"
+  workspace_id = tfe_workspace.workspaces[1].id
   sensitive    = true
 }
 

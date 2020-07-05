@@ -9,6 +9,10 @@ variable "TFC_WORKSPACE_NAME" {
   type = string
 }
 
+variable "SQLSERVER_ADMIN_PASSWORD" {
+  type = string
+}
+
 variable "ACR_ADMIN_PASSWORD" {
   type = string
 }
@@ -48,7 +52,7 @@ resource "azurerm_sql_server" "default" {
   location                     = azurerm_resource_group.default.location
   version                      = "12.0"
   administrator_login          = "beershop"
-  administrator_login_password = var.SQL_SERVER_ADMINISTRATOR_LOGIN_PASSWORD
+  administrator_login_password = var.SQLSERVER_ADMIN_PASSWORD
 
   tags = local.env.tags
 }
