@@ -8,7 +8,7 @@ rg_location: eastus2
 st_replication: "LRS"
 
 # SQL Server
-sqldb_edition: Free
+sqldb_edition: Basic
 
 # Service Bus
 bus_sku: Basic

@@ -160,9 +160,5 @@ resource "azurerm_app_service_plan" "functions" {
 #     always_on        = local.env.app_api_alwayson
 #   }
 
-#   identity {
-#     type = "SystemAssigned"
-#   }
-
 #   tags = local.env.tags
 # }
