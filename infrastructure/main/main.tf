@@ -185,7 +185,7 @@ resource "azurerm_application_insights" "functions" {
   location            = azurerm_resource_group.default.location
   application_type    = "other"
 
-  tags = local.tags
+  tags = local.env.tags
 }
 
 
@@ -226,5 +226,5 @@ resource "azurerm_function_app" "beershop" {
     ]
   }
 
-  tags = local.tags
+  tags = local.env.tags
 }
