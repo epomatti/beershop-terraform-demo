@@ -19,6 +19,9 @@ locals {
   )
 }
 
+
+# Workspaces
+
 resource "tfe_workspace" "workspaces" {
   count              = length(local.env.workspaces)
   name               = local.env.workspaces[count.index]
@@ -33,11 +36,40 @@ resource "tfe_workspace" "workspaces" {
 
 }
 
-resource "tfe_variable" "variables" {
+# Azure ARM Provider
+
+resource "tfe_variable" "ARM_CLIENT_ID" {
   count        = length(tfe_workspace.workspaces)
   key          = "ARM_CLIENT_ID" 
   value        = var.ARM_CLIENT_ID
-  category     = "terraform"
+  category     = "environment"
+  workspace_id = tfe_workspace.workspaces[count.index].id
+  sensitive    = false
+}
+
+resource "tfe_variable" "ARM_CLIENT_SECRET" {
+  count        = length(tfe_workspace.workspaces)
+  key          = "ARM_CLIENT_SECRET" 
+  value        = var.ARM_CLIENT_SECRET
+  category     = "environment"
   workspace_id = tfe_workspace.workspaces[count.index].id
   sensitive    = true
+}
+
+resource "tfe_variable" "ARM_SUBSCRIPTION_ID" {
+  count        = length(tfe_workspace.workspaces)
+  key          = "ARM_SUBSCRIPTION_ID" 
+  value        = var.ARM_SUBSCRIPTION_ID
+  category     = "environment"
+  workspace_id = tfe_workspace.workspaces[count.index].id
+  sensitive    = false
+}
+
+resource "tfe_variable" "ARM_TENANT_ID" {
+  count        = length(tfe_workspace.workspaces)
+  key          = "ARM_TENANT_ID" 
+  value        = var.ARM_TENANT_ID
+  category     = "environment"
+  workspace_id = tfe_workspace.workspaces[count.index].id
+  sensitive    = false
 }
