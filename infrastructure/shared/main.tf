@@ -20,7 +20,7 @@ resource "azurerm_resource_group" "default" {
 
 resource "azurerm_container_registry" "default" {
   name                = "beershop"
-  resource_group_name = azurerm_resource_group.name
+  resource_group_name = azurerm_resource_group.default.name
   location            = local.location
   sku                 = "Basic"
   admin_enabled       = true
