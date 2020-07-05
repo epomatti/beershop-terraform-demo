@@ -1,2 +1,9 @@
-workspaces: [ beershop-shared ]
-branches: [ master ]
+branches: 
+  - master
+  - master
+working_directories: 
+  - infrastructure/shared
+  - infrastructure/dev
+workspaces: 
+  - beershop-shared
+  - beershop-dev

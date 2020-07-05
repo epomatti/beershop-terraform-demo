@@ -42,7 +42,7 @@ resource "tfe_workspace" "workspaces" {
   count              = length(local.env.workspaces)
   name               = local.env.workspaces[count.index]
   organization       = local.organization
-  working_directory  = "infrastructure/shared"
+  working_directory  = local.env.working_directories[count.index]
 
   vcs_repo {
       identifier     = "epomatti/beershop-terraform-demo"
