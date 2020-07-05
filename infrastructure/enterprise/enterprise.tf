@@ -4,8 +4,12 @@ terraform {
   }
 }
 
+
 locals {
   organization = "beershop"
+  env = merge(
+    yamldecode(file("enterprise.yaml"))
+  )
 }
 
 resource "tfe_workspace" "beershop-shared" {
