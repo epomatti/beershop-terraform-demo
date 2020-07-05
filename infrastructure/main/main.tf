@@ -44,28 +44,28 @@ resource "azurerm_storage_account" "default" {
 }
 
 
-# SQL Server
+# # SQL Server
 
-resource "azurerm_sql_server" "default" {
-  name                         = "sql-beershop-${local.env.suffix}"
-  resource_group_name          = azurerm_resource_group.default.name
-  location                     = azurerm_resource_group.default.location
-  version                      = "12.0"
-  administrator_login          = "beershop"
-  administrator_login_password = var.SQLSERVER_ADMIN_PASSWORD
+# resource "azurerm_sql_server" "default" {
+#   name                         = "sql-beershop-${local.env.suffix}"
+#   resource_group_name          = azurerm_resource_group.default.name
+#   location                     = azurerm_resource_group.default.location
+#   version                      = "12.0"
+#   administrator_login          = "beershop"
+#   administrator_login_password = var.SQLSERVER_ADMIN_PASSWORD
 
-  tags = local.env.tags
-}
+#   tags = local.env.tags
+# }
 
-resource "azurerm_sql_database" "default" {
-  name                = "sqldb-beershop-${local.env.suffix}"
-  resource_group_name = azurerm_resource_group.default.name
-  location            = azurerm_resource_group.default.location
-  server_name         = azurerm_sql_server.default.name
-  edition             = local.env.sqldb_edition
+# resource "azurerm_sql_database" "default" {
+#   name                = "sqldb-beershop-${local.env.suffix}"
+#   resource_group_name = azurerm_resource_group.default.name
+#   location            = azurerm_resource_group.default.location
+#   server_name         = azurerm_sql_server.default.name
+#   edition             = local.env.sqldb_edition
 
-  tags = local.env.tags
-}
+#   tags = local.env.tags
+# }
 
 
 # Service Bus
