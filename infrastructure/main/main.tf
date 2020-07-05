@@ -143,8 +143,8 @@ resource "azurerm_app_service" "api" {
     DOCKER_REGISTRY_SERVER_PASSWORD                 = var.ACR_ADMIN_PASSWORD
     # beershop variables
     BEERSHOP_SQLSERVER_PASSWORD                     = var.SQLSERVER_ADMIN_PASSWORD
-    BEERSHOP_SERVICEBUS_PRIMARY_CONNECTION_STRING   = azurerm_servicebus_namespace.api.default_primary_connection_string
-    BEERSHOP_SERVICEBUS_SECONDARY_CONNECTION_STRING = azurerm_servicebus_namespace.api.default_secondary_connection_string
+    BEERSHOP_SERVICEBUS_PRIMARY_CONNECTION_STRING   = azurerm_servicebus_namespace.default.default_primary_connection_string
+    BEERSHOP_SERVICEBUS_SECONDARY_CONNECTION_STRING = azurerm_servicebus_namespace.default.default_secondary_connection_string
     BEERSHOP_SERVICEBUS_CONNECTION_STRING           = local.env.app_api_servicebus_connection_string
   }
 
@@ -189,7 +189,7 @@ resource "azurerm_function_app" "beershop" {
     #"WEBSITE_ENABLE_SYNC_UPDATE_SITE"     = "true"                                     // managed by Azure DevOps (must be not null)
     # beershop variables
     BEERSHOP_SQLSERVER_PASSWORD           = var.SQLSERVER_ADMIN_PASSWORD
-    AzureWebJobsServiceBus                = azurerm_servicebus_queue_authorization_rule.api.primary_connection_string
+    AzureWebJobsServiceBus                = azurerm_servicebus_namespace.default.default_primary_connection_string
   }
 
   site_config {
