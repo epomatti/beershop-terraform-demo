@@ -3,6 +3,7 @@ provider "azurerm" {
   }
 }
 
+
 # Variables
 
 variable "TFC_WORKSPACE_NAME" {
@@ -18,10 +19,11 @@ variable "ACR_ADMIN_PASSWORD" {
 }
 
 locals {
-  env  = merge(
+  env = merge(
     yamldecode(file("env/${var.TFC_WORKSPACE_NAME}.yaml"))
   )
 }
+
 
 # Resource Group
 
@@ -30,6 +32,7 @@ resource "azurerm_resource_group" "default" {
   location = local.env.rg_location
   tags     = local.env.tags
 }
+
 
 # Storage Account
 
@@ -148,6 +151,7 @@ resource "azurerm_app_service_plan" "functions" {
   tags = local.env.tags
 }
 
+
 # Web Apps
 
 resource "azurerm_app_service" "api" {
@@ -176,6 +180,7 @@ resource "azurerm_app_service" "api" {
 
   tags = local.env.tags
 }
+
 
 # Application Insights
 
