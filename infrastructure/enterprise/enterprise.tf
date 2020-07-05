@@ -4,6 +4,10 @@ terraform {
   }
 }
 
+variable "OAUTH_TOKEN_ID" {
+  type = string
+}
+
 locals {
   organization = "beershop"
   env = merge(
