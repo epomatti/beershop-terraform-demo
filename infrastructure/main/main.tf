@@ -138,3 +138,31 @@ resource "azurerm_app_service_plan" "functions" {
 
   tags = local.env.tags
 }
+
+# Web Apps
+
+# resource "azurerm_app_service" "api" {
+#   name                = "app-beershop-${local.env.suffix}"
+#   resource_group_name = azurerm_resource_group.default.name
+#   location            = azurerm_resource_group.default.location
+#   app_service_plan_id = azurerm_app_service_plan.api.id
+
+#   app_settings = {
+#     DOCKER_ENABLE_CI                    = true
+#     WEBSITES_ENABLE_APP_SERVICE_STORAGE = false
+#     DOCKER_REGISTRY_SERVER_URL          = "https://beershop.azurecr.io"
+#     DOCKER_REGISTRY_SERVER_USERNAME     = "beershop"
+#     DOCKER_REGISTRY_SERVER_PASSWORD     = var.ACR_ADMIN_PASSWORD
+#   }
+
+#   site_config {
+#     linux_fx_version = "DOCKER|beershop.azurecr.io/beershop-api:${local.env.suffix}"
+#     always_on        = local.env.app_api_alwayson
+#   }
+
+#   identity {
+#     type = "SystemAssigned"
+#   }
+
+#   tags = local.env.tags
+# }

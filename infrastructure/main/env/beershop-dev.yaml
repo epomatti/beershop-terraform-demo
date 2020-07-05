@@ -20,6 +20,9 @@ plan_api_sku: B1
 plan_functions_tier: Basic
 plan_functions_sku: B1
 
+# Web Apps
+app_api_alwayson: false
+
 # Tags
 tags:
   system: beershop

@@ -73,7 +73,7 @@ resource "tfe_variable" "ACR_ADMIN_PASSWORD" {
 resource "tfe_variable" "SQLSERVER_ADMIN_PASSWORD_DEVELOPMENT" {
   key          = "SQLSERVER_ADMIN_PASSWORD" 
   value        = var.SQLSERVER_ADMIN_PASSWORD_DEVELOPMENT
-  category     = "env"
+  category     = "terraform"
   workspace_id = tfe_workspace.workspaces[1].id
   sensitive    = true
 }
