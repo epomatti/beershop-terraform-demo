@@ -95,6 +95,8 @@ resource "azurerm_servicebus_namespace" "default" {
   tags = local.env.tags
 }
 
+# default_primary_connection_string 
+
 resource "azurerm_servicebus_queue" "orders" {
   name                = "sbq-orders"
   resource_group_name = azurerm_resource_group.default.name
