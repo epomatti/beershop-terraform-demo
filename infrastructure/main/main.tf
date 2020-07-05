@@ -146,6 +146,7 @@ resource "azurerm_app_service" "api" {
     BEERSHOP_SERVICEBUS_PRIMARY_CONNECTION_STRING   = azurerm_servicebus_namespace.default.default_primary_connection_string
     BEERSHOP_SERVICEBUS_SECONDARY_CONNECTION_STRING = azurerm_servicebus_namespace.default.default_secondary_connection_string
     BEERSHOP_SERVICEBUS_CONNECTION_STRING           = local.env.app_api_servicebus_connection_string
+    sqldb_connection                                = "Server=tcp:${azurerm_sql_server.default.name}.database.windows.net,1433;Initial Catalog=${azurerm_sql_database.default.name};Persist Security Info=False;User ID=beershop;Password=${azurerm_sql_server.default.administrator_login_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
   }
 
   site_config {
