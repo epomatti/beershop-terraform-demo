@@ -17,18 +17,12 @@ namespace functions
             using (SqlConnection conn = new SqlConnection(str))
             {
                 conn.Open();
-                var text = "SELECT * from Orders";
+                var text = "update Orders set Processed = 1 where Id = @orderId";
 
-                using (SqlCommand cmd = new SqlCommand(text, conn))
+                using (SqlCommand command = new SqlCommand(text, conn))
                 {
-                    using (SqlDataReader reader = cmd.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            Console.WriteLine(reader["Beer"]);
-                            Console.WriteLine(reader["Processed"]);
-                        }
-                    }
+                    command.Parameters.AddWithValue("@orderId", order);
+                    command.ExecuteNonQuery();
                 }
             }
         }
