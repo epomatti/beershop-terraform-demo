@@ -137,6 +137,7 @@ resource "azurerm_app_service" "app" {
   app_service_plan_id = azurerm_app_service_plan.app.id
 
   app_settings = {
+    DOCKER_ENABLE_CI                                = "true"
     WEBSITES_ENABLE_APP_SERVICE_STORAGE             = false
     DOCKER_REGISTRY_SERVER_URL                      = "https://beershop.azurecr.io"
     DOCKER_REGISTRY_SERVER_USERNAME                 = "beershop"
