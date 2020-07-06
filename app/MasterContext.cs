@@ -56,6 +56,7 @@ namespace app
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
         public Boolean Processed { get; set; }
+        public DateTime CreatedAt { get; set; }
         public Beer Beer { get; set; }
     }
 }

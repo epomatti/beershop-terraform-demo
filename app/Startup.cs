@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
+using app.Repositories;
 
 namespace app
 {
@@ -26,7 +27,7 @@ namespace app
         {
             services.AddDbContext<MasterContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("BeershopDatabase")));
-
+            services.AddScoped<OrderRepository>();
             services.AddControllersWithViews();
         }
 

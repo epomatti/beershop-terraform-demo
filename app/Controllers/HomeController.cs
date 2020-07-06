@@ -6,18 +6,21 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using app.Models;
+using app.Repositories;
 
 namespace app.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private OrderRepository _repository;
         private MasterContext _context;
 
-        public HomeController(ILogger<HomeController> logger, MasterContext context)
+        public HomeController(ILogger<HomeController> logger, OrderRepository _repository, MasterContext _context)
         {
             _logger = logger;
-            this._context = context;
+            this._repository = _repository;
+            this._context = _context;
         }
 
         public IActionResult Index()
@@ -43,29 +46,14 @@ namespace app.Controllers
         [HttpPost]
         public IActionResult Buy(BeerOrder beerOrder)
         {
-            try
+            if (ModelState.IsValid)
             {
-                if (ModelState.IsValid)
-                {
-                    var order = new Order
-                    {
-                        Processed = false
-                    };
-                    _context.Orders.Add(order);
-                    _context.SaveChanges();
-                    return RedirectToAction(nameof(Orders));
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex.ToString());
-                //Log the error (uncomment ex variable name and write a log.
-                ModelState.AddModelError("", "Unable to save changes. " +
-                    "Try again, and if the problem persists " +
-                    "see your system administrator.");
+                this._repository.CreateOrder(beerOrder);
+                return RedirectToAction(nameof(Orders));
             }
 
-            return RedirectToAction(nameof(Orders));
+            return RedirectToAction(nameof(Index));
         }
     }
 }
+
