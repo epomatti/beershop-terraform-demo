@@ -1,10 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -27,6 +22,7 @@ namespace app
         {
             services.AddDbContext<MasterContext>(options =>
                 options.UseSqlServer(Configuration["environmentVariables:sqldb_connection"]));
+
             services.AddScoped<OrderRepository>();
             services.AddControllersWithViews();
         }
@@ -34,7 +30,6 @@ namespace app
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            ApplyMigrations(app);
 
             if (env.IsDevelopment())
             {
@@ -56,13 +51,13 @@ namespace app
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+            
+            ApplyMigrations(app);
         }
 
         private void ApplyMigrations(IApplicationBuilder app)
         {
-            using (var serviceScope = app.ApplicationServices
-                .GetRequiredService<IServiceScopeFactory>()
-                .CreateScope())
+            using (var serviceScope = app.ApplicationServices.CreateScope())
             {
                 using (var context = serviceScope.ServiceProvider.GetService<MasterContext>())
                 {
