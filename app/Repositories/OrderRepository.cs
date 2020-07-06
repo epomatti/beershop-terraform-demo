@@ -1,6 +1,10 @@
 using System;
 using app.Models;
 using System.Linq;
+using Microsoft.Azure.ServiceBus;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 namespace app.Repositories
 {
@@ -9,19 +13,22 @@ namespace app.Repositories
     {
 
         private MasterContext _context;
+        private readonly IConfiguration _config;
+        
 
-        public OrderRepository(MasterContext context)
+        public OrderRepository(MasterContext context, IConfiguration config)
         {
             this._context = context;
+            this._config = config;
         }
 
-        public void CreateOrder(BeerOrder beerOrder)
+        public async void CreateOrder(BeerOrder beerOrder)
         {
-            this.InsertOrder(beerOrder);
-            this.Enqueue(beerOrder);
+            Guid orderId = this.InsertOrder(beerOrder);
+            await this.Enqueue(orderId);
         }
 
-        private void InsertOrder(BeerOrder beerOrder)
+        private Guid InsertOrder(BeerOrder beerOrder)
         {
             var order = new Order
             {
@@ -31,11 +38,22 @@ namespace app.Repositories
             };
             _context.Orders.Add(order);
             _context.SaveChanges();
+            return order.Id;
         }
 
-        private void Enqueue(BeerOrder beerOrder)
-        {
-            
+        private async Task Enqueue(Guid orderId)
+        {            
+            IQueueClient queueClient = null;
+            try {
+                var key = _config["Parent:Child"];
+                queueClient = new QueueClient("<your_connection_string>", "sbq-orders");
+                var message = new Message(Encoding.UTF8.GetBytes(orderId.ToString()));
+                await queueClient.SendAsync(message);
+            } finally {
+                if(queueClient != null) {
+                    await queueClient.CloseAsync();
+                }
+            }
         }
 
     }
