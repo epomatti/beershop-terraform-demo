@@ -15,7 +15,7 @@ resources:
 variables:
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: 'beershop-acr-serviceconnection'
-  imageRepository: 'beershopapp'
+  imageRepository: 'beershop-app'
   containerRegistry: 'beershop.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/app/Dockerfile'
   
