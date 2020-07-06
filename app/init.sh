@@ -1,0 +1,1 @@
+cp appsettings.Development.template.json appsettings.Development.json

@@ -45,8 +45,8 @@ namespace app.Repositories
         {            
             IQueueClient queueClient = null;
             try {
-                var key = _config["Parent:Child"];
-                queueClient = new QueueClient("<your_connection_string>", "sbq-orders");
+                var connectionString = _config["environmentVariables:SERVICE_BUS_CONNECTION_STRING"];
+                queueClient = new QueueClient(connectionString, "sbq-orders");
                 var message = new Message(Encoding.UTF8.GetBytes(orderId.ToString()));
                 await queueClient.SendAsync(message);
             } finally {
