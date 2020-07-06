@@ -1,16 +1,17 @@
-﻿@model app.Beer
+﻿@model app.Models.BeerOrder
 @{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Order your beer</h1>
+    <h1 class="display-5">Order your beer</h1>
 
-    @foreach (var beer in ViewData["Beers"] as IEnumerable<app.Beer>) {
-        
-        @using (Html.BeginForm("Buy", "Home", FormMethod.Post)) {
-
-            @Html.HiddenFor(beer => beer.Id)
+    @foreach (var beer in ViewData["Beers"] as IEnumerable<app.Beer>)
+    {
+        @using (Html.BeginForm("Buy", "Home", FormMethod.Post))
+        { 
+            @beer.Name
+            <input type="hidden" name="BeerId" value="@beer.Id" />
             <input type="submit" value="Buy"/>
         }
     }

@@ -41,7 +41,7 @@ namespace app.Controllers
         }
 
         [HttpPost]
-        public IActionResult Buy(Beer beer)
+        public IActionResult Buy(BeerOrder beerOrder)
         {
             try
             {
@@ -49,7 +49,6 @@ namespace app.Controllers
                 {
                     var order = new Order
                     {
-                        Beer = beer,
                         Processed = false
                     };
                     _context.Orders.Add(order);
