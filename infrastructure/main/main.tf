@@ -182,6 +182,7 @@ resource "azurerm_function_app" "beershop" {
   version                    = "~3"
 
   app_settings = {
+    DOCKER_ENABLE_CI                    = "true"
     APPINSIGHTS_INSTRUMENTATIONKEY      = azurerm_application_insights.functions.instrumentation_key
     WEBSITES_ENABLE_APP_SERVICE_STORAGE = false
     DOCKER_REGISTRY_SERVER_URL          = "https://beershop.azurecr.io"
