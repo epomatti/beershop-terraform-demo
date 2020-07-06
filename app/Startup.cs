@@ -26,7 +26,7 @@ namespace app
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<MasterContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("BeershopDatabase")));
+                options.UseSqlServer(Configuration["environmentVariables:sqldb_connection"]));
             services.AddScoped<OrderRepository>();
             services.AddControllersWithViews();
         }
@@ -35,7 +35,7 @@ namespace app
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             ApplyMigrations(app);
-            
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
