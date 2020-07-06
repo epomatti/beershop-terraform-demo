@@ -14,14 +14,14 @@ sqldb_edition: Basic
 bus_sku: Basic
 
 # App Plans
-plan_api_tier: Basic
-plan_api_sku: B1
+plan_app_tier: Basic
+plan_app_sku: B1
 plan_functions_tier: Basic
 plan_functions_sku: B1
 
 # Web Apps
-app_api_alwayson: false
-app_api_servicebus_connection_string: primary
+app_alwayson: false
+app_servicebus_connection_string: primary
 
 # Functions
 functions_alwayson: false

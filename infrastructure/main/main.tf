@@ -98,16 +98,16 @@ resource "azurerm_servicebus_queue" "orders" {
 
 # App Service Plans
 
-resource "azurerm_app_service_plan" "api" {
-  name                = "plan-beershop-api-${local.env.suffix}"
+resource "azurerm_app_service_plan" "app" {
+  name                = "plan-beershop-app-${local.env.suffix}"
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
   kind                = "Linux"
   reserved            = true
 
   sku {
-    tier = local.env.plan_api_tier
-    size = local.env.plan_api_sku
+    tier = local.env.plan_app_tier
+    size = local.env.plan_app_sku
   }
 
   tags = local.env.tags
@@ -121,8 +121,8 @@ resource "azurerm_app_service_plan" "functions" {
   reserved            = true
 
   sku {
-    tier = local.env.plan_api_tier
-    size = local.env.plan_api_sku
+    tier = local.env.plan_functions_tier
+    size = local.env.plan_functions_sku
   }
 
   tags = local.env.tags
@@ -130,11 +130,11 @@ resource "azurerm_app_service_plan" "functions" {
 
 # Web Apps
 
-resource "azurerm_app_service" "api" {
+resource "azurerm_app_service" "app" {
   name                = "app-beershop-${local.env.suffix}"
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
-  app_service_plan_id = azurerm_app_service_plan.api.id
+  app_service_plan_id = azurerm_app_service_plan.app.id
 
   app_settings = {
     WEBSITES_ENABLE_APP_SERVICE_STORAGE             = false
@@ -145,13 +145,13 @@ resource "azurerm_app_service" "api" {
     BEERSHOP_SQLSERVER_PASSWORD                     = var.SQLSERVER_ADMIN_PASSWORD
     BEERSHOP_SERVICEBUS_PRIMARY_CONNECTION_STRING   = azurerm_servicebus_namespace.default.default_primary_connection_string
     BEERSHOP_SERVICEBUS_SECONDARY_CONNECTION_STRING = azurerm_servicebus_namespace.default.default_secondary_connection_string
-    BEERSHOP_SERVICEBUS_CONNECTION_STRING           = local.env.app_api_servicebus_connection_string
+    BEERSHOP_SERVICEBUS_CONNECTION_STRING           = local.env.app_servicebus_connection_string
     sqldb_connection                                = "Server=tcp:${azurerm_sql_server.default.name}.database.windows.net,1433;Initial Catalog=${azurerm_sql_database.default.name};Persist Security Info=False;User ID=beershop;Password=${azurerm_sql_server.default.administrator_login_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
   }
 
   site_config {
-    linux_fx_version = "DOCKER|beershop.azurecr.io/beershop-api:${local.env.suffix}"
-    always_on        = local.env.app_api_alwayson
+    linux_fx_version = "DOCKER|beershop.azurecr.io/beershop-app:${local.env.suffix}"
+    always_on        = local.env.app_alwayson
   }
 
   tags = local.env.tags
