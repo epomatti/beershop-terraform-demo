@@ -6,7 +6,7 @@
 <p>Orders placed:</p>
 
 @foreach (var order in ViewData["Orders"] as IEnumerable<app.Order>) {
-        
+    
     @order.Id
 
     @order.Processed
