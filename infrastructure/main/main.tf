@@ -169,6 +169,16 @@ resource "azurerm_application_insights" "functions" {
   tags = local.env.tags
 }
 
+resource "azurerm_log_analytics_workspace" "app" {
+  name                = "log-beershop-app-${local.env.suffix}"
+  resource_group_name = azurerm_resource_group.default.name
+  location            = azurerm_resource_group.default.location
+  sku                 = "PerGB2018"
+  retention_in_days   = 30
+
+  tags = local.tags
+}
+
 # Functions
 
 resource "azurerm_function_app" "beershop" {
