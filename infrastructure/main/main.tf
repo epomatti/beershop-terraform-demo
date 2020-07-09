@@ -169,6 +169,8 @@ resource "azurerm_application_insights" "functions" {
   tags = local.env.tags
 }
 
+# Log Analytics
+
 resource "azurerm_log_analytics_workspace" "app" {
   name                = "log-beershop-app-${local.env.suffix}"
   resource_group_name = azurerm_resource_group.default.name
