@@ -178,7 +178,7 @@ resource "azurerm_log_analytics_workspace" "app" {
   sku                 = "PerGB2018"
   retention_in_days   = 30
 
-  tags = local.tags
+  tags = local.env.tags
 }
 
 # Functions
