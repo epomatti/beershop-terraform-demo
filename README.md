@@ -2,11 +2,11 @@
 
 A demo project to showcase Terraform features on top of Azure Cloud.
 
-There are three main moduels:
+The demo is composed of three main modules:
 
-- App - A Dotnet MVC for user interaction where the user is able to push orders to a queue.
-- Functions - The backend for the application that pulls and processes messages in the queue.
-- Infrastructure - The actual Terraform code that creates all the required resources.
+- [**App**](/app) - A Dotnet MVC for user interaction where the user is able to push orders to a queue.
+- [**Functions**](/functions) - The backend for the application that pulls and processes messages in the queue.
+- [**Infrastructure**](/infrastructure) - The actual Terraform code that creates all the required resources.
 
 Each module is documented separetely.
 
