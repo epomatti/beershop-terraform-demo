@@ -28,12 +28,8 @@ locals {
 resource "azurerm_resource_group" "default" {
   name     = "beershop-${local.env.suffix}"
   location = local.env.rg_location
+  
   tags     = local.env.tags
-
-  lifecycle {
-    prevent_destroy = true
-  }
-
 }
 
 # Storage Account
