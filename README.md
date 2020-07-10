@@ -13,3 +13,7 @@ Each module is documented separetely.
 The following diagram shows all the resources provisioned with Terraform, plus an ACR for Docker images.
 
 <img src="_docs/demo.png" width="500"> </img>
+
+### References
+
+Checkout the [slide deck](https://slides.com/epomatti/terraform) for this demo.
