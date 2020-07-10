@@ -1,9 +1,12 @@
 branches: 
   - master
   - master
+  - master
 working_directories: 
   - infrastructure/shared
   - infrastructure/main
+  - infrastructure/demo-vnet
 workspaces: 
   - beershop-shared
   - beershop-dev
+  - beershop-demo-vnet
