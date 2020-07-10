@@ -3,6 +3,11 @@ provider "azurerm" {
   features {}
 }
 
+# Just to silence workspace error =)
+variable "ACR_ADMIN_PASSWORD" {
+  type = string
+}
+
 # Create a resource group
 resource "azurerm_resource_group" "beershop-demo-vnet" {
   name     = "beershop-demovnet"
