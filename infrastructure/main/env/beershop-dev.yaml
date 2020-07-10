@@ -15,7 +15,7 @@ bus_sku: Basic
 
 # App Plans
 plan_app_tier: Basic
-plan_app_sku: B2
+plan_app_sku: B1
 plan_functions_tier: Basic
 plan_functions_sku: B1
 
