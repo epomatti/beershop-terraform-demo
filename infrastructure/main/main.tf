@@ -53,13 +53,15 @@ resource "azurerm_virtual_network" "vnet" {
   address_space       = ["10.0.0.0/16"]
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
+
+    tags = local.env.tags
 }
 
 resource "azurerm_subnet" "subnet" {
   name                 = "snet-beershop-${local.env.suffix}"
   resource_group_name  = azurerm_resource_group.default.name
   virtual_network_name = azurerm_virtual_network.vnet.name
-  address_prefix       = "10.0.0.0/24"
+  address_prefixes     = ["10.0.0.0/24"]
   service_endpoints    = ["Microsoft.Sql"]
 }
 
