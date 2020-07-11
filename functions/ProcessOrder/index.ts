@@ -2,10 +2,10 @@ import { AzureFunction, Context } from "@azure/functions"
 import * as sql from "mssql"
 
 const config = {
-    user: process.env.BEERSHOP_MSSQL_USERNAME,
-    password: process.env.BEERSHOP_MSSQL_PASSWORD,
-    server: process.env.BEERSHOP_MSSQL_SERVER,
-    database: process.env.BEERSHOP_MSSQL_DATABASE,
+    user: process.env.BEERSHOP_SQLSERVER_USERNAME,
+    password: process.env.BEERSHOP_SQLSERVER_PASSWORD,
+    server: process.env.BEERSHOP_SQLSERVER_SERVER,
+    database: process.env.BEERSHOP_SQLSERVER_DATABASE,
 }
 
 const serviceBusQueueTrigger: AzureFunction = async function (context: Context, order: any): Promise<void> {
