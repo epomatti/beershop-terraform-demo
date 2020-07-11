@@ -58,13 +58,11 @@ namespace Beershop
 
         private void ApplyMigrations(IApplicationBuilder app)
         {
-
             Console.WriteLine("Starting migrations.");
             using (var serviceScope = app.ApplicationServices.CreateScope())
             {
                 using (var context = serviceScope.ServiceProvider.GetService<BeershopContext>())
                 {
-
                     context.Database.Migrate();
                     Console.WriteLine("Migrations applied.");
                 }

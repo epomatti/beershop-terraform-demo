@@ -6,10 +6,15 @@ const serviceBusQueueTrigger: AzureFunction = async function (context: Context, 
 
     const client = new pg.Client()
     await client.connect()
-    const res = await client.query('SELECT NOW()')
-    context.log(res)
-    await client.end()
 
+    const text = `
+        UPDATE public."Orders"
+            SET "Processed" = true
+            WHERE "Id" = $1
+    `
+    const values = [order]
+    await client.query(text, values)
+    await client.end()
 };
 
 export default serviceBusQueueTrigger;
