@@ -104,8 +104,8 @@ resource "azurerm_postgresql_firewall_rule" "default" {
   server_name         = azurerm_postgresql_server.default.name
 
   # Allows Azure endpoints
-  start_ip_address    = 0.0.0.0
-  end_ip_address      = 0.0.0.0
+  start_ip_address    = "0.0.0.0"
+  end_ip_address      = "0.0.0.0"
 }
 
 # Service Bus
