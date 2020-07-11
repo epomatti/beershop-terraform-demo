@@ -81,10 +81,9 @@ resource "azurerm_mssql_server" "default" {
 
 resource "azurerm_mssql_database" "default" {
   name                = "sqldb-beershop-${local.env.suffix}"
-  resource_group_name = azurerm_resource_group.default.name
-  location            = azurerm_resource_group.default.location
-  server_name         = azurerm_mssql_server.default.name
-  edition             = local.env.sqldb_edition
+  server_id           = azurerm_mssql_server.default.id
+  sku_name            = local.env.sql_sku_name
+  zone_redundant      = local.env.sql_zone_redudant
 
   tags = local.env.tags
 }
