@@ -14,8 +14,8 @@ sqldb_edition: Basic
 bus_sku: Basic
 
 # App Plans
-plan_tier: Basic
-plan_sku: B1
+plan_tier: Standard
+plan_sku: S1
 
 # Web Apps
 app_alwayson: false
