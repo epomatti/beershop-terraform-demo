@@ -46,6 +46,23 @@ resource "azurerm_storage_account" "default" {
   tags = local.env.tags
 }
 
+# VNet
+
+resource "azurerm_virtual_network" "vnet" {
+  name                = "vnet-beershop-${local.env.suffix}"
+  address_space       = ["10.0.0.0/16"]
+  resource_group_name = azurerm_resource_group.default.name
+  location            = azurerm_resource_group.default.location
+}
+
+resource "azurerm_subnet" "subnet" {
+  name                 = "snet-beershop-${local.env.suffix}"
+  resource_group_name  = azurerm_resource_group.default.name
+  virtual_network_name = azurerm_virtual_network.vnet.name
+  address_prefix       = "10.0.0.0/24"
+  service_endpoints    = ["Microsoft.Sql"]
+}
+
 # SQL Server
 
 resource "azurerm_sql_server" "default" {
@@ -67,6 +84,21 @@ resource "azurerm_sql_database" "default" {
   edition             = local.env.sqldb_edition
 
   tags = local.env.tags
+}
+
+resource "azurerm_sql_virtual_network_rule" "sqlvnetrule" {
+  name                = "sql-vnet-rule"
+  resource_group_name = azurerm_resource_group.default.name
+  server_name         = azurerm_sql_server.default.name
+  subnet_id           = azurerm_subnet.subnet.id
+}
+
+resource "azurerm_sql_firewall_rule" "vnet-rule" {
+  name                = "FirewallRuleVNet"
+  resource_group_name = azurerm_resource_group.default.name
+  server_name         = azurerm_sql_server.default.name
+  start_ip_address    = "10.0.0.0"
+  end_ip_address      = "10.0.0.255"
 }
 
 # Service Bus
