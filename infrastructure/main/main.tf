@@ -28,7 +28,7 @@ locals {
 resource "azurerm_resource_group" "default" {
   name     = "beershop-${local.env.suffix}"
   location = local.env.rg_location
-  
+
   tags     = local.env.tags
 }
 
@@ -188,8 +188,6 @@ resource "azurerm_function_app" "beershop" {
     DOCKER_REGISTRY_SERVER_URL          = "https://beershop.azurecr.io"
     DOCKER_REGISTRY_SERVER_USERNAME     = "beershop"
     DOCKER_REGISTRY_SERVER_PASSWORD     = var.ACR_ADMIN_PASSWORD
-    #"WEBSITE_RUN_FROM_PACKAGE"            = "ThisWillBeSetToAnURLByAzureDevOpsDeploy", // managed by Azure DevOps (must be not null)
-    #"WEBSITE_ENABLE_SYNC_UPDATE_SITE"     = "true"                                     // managed by Azure DevOps (must be not null)
     # beershop variables
     BEERSHOP_SQLSERVER_PASSWORD         = var.SQLSERVER_ADMIN_PASSWORD
     AzureWebJobsServiceBus              = azurerm_servicebus_namespace.default.default_primary_connection_string
@@ -198,14 +196,6 @@ resource "azurerm_function_app" "beershop" {
 
   site_config {
     linux_fx_version = "DOCKER|beershop.azurecr.io/beershop-functions:${local.env.suffix}"
-    always_on        = local.env.functions_alwayson
-  }
-
-  lifecycle {
-    ignore_changes = [
-      app_settings["WEBSITE_RUN_FROM_PACKAGE"],
-      app_settings["WEBSITE_ENABLE_SYNC_UPDATE_SITE"]
-    ]
   }
 
   tags = local.env.tags
