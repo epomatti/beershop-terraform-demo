@@ -71,7 +71,7 @@ resource "tfe_variable" "ACR_ADMIN_PASSWORD" {
 # Database
 
 resource "tfe_variable" "PSQL_PASSWORD_DEVELOPMENT" {
-  key          = "PSQL_PASSWORD_DEVELOPMENT" 
+  key          = "PSQL_PASSWORD" 
   value        = var.PSQL_PASSWORD_DEVELOPMENT
   category     = "terraform"
   workspace_id = tfe_workspace.workspaces[1].id
