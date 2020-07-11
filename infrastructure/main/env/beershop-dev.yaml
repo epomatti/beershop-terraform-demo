@@ -16,8 +16,6 @@ bus_sku: Basic
 # App Plans
 plan_app_tier: Basic
 plan_app_sku: B1
-plan_functions_tier: Dynamic
-plan_functions_sku: Y1
 
 # Web Apps
 app_alwayson: false

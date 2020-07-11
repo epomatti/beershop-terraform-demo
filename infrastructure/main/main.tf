@@ -111,8 +111,8 @@ resource "azurerm_app_service_plan" "functions" {
   reserved            = true
 
   sku {
-    tier = local.env.plan_functions_tier
-    size = local.env.plan_functions_sku
+    tier = "Dynamic"
+    size = "Y1"
   }
 
   tags = local.env.tags
