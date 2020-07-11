@@ -108,7 +108,6 @@ resource "azurerm_app_service_plan" "functions" {
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
   kind                = "FunctionApp"
-  reserved            = true
 
   sku {
     tier = "Dynamic"
