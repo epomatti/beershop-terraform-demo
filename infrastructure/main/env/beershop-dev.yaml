@@ -2,7 +2,7 @@
 suffix: dev
 
 # Resource Group
-rg_location: eastus2
+rg_location: eastus
 
 # Storage Account
 st_replication: "LRS"
