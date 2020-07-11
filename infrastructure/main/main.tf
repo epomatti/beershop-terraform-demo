@@ -133,23 +133,19 @@ resource "azurerm_app_service" "app" {
     DOCKER_REGISTRY_SERVER_USERNAME                 = "beershop"
     DOCKER_REGISTRY_SERVER_PASSWORD                 = var.ACR_ADMIN_PASSWORD
     # beershop variables
-    #BEERSHOP_SQLSERVER_PASSWORD                     = var.SQLSERVER_ADMIN_PASSWORD
-    #BEERSHOP_SERVICEBUS_PRIMARY_CONNECTION_STRING   = azurerm_servicebus_namespace.default.default_primary_connection_string
-    #BEERSHOP_SERVICEBUS_SECONDARY_CONNECTION_STRING = azurerm_servicebus_namespace.default.default_secondary_connection_string
-    #BEERSHOP_SERVICEBUS_CONNECTION_STRING           = local.env.app_servicebus_connection_string
-    #sqldb_connection                                = "Server=tcp:${azurerm_sql_server.default.name}.database.windows.net,1433;Initial Catalog=${azurerm_sql_database.default.name};Persist Security Info=False;User ID=beershop;Password=${azurerm_sql_server.default.administrator_login_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+    BEERSHOP_SQLSERVER_PASSWORD                     = var.SQLSERVER_ADMIN_PASSWORD
+    BEERSHOP_SERVICEBUS_PRIMARY_CONNECTION_STRING   = azurerm_servicebus_namespace.default.default_primary_connection_string
+    BEERSHOP_SERVICEBUS_SECONDARY_CONNECTION_STRING = azurerm_servicebus_namespace.default.default_secondary_connection_string
+    BEERSHOP_SERVICEBUS_CONNECTION_STRING           = local.env.app_servicebus_connection_string
+    sqldb_connection                                = "Server=tcp:${azurerm_sql_server.default.name}.database.windows.net,1433;Initial Catalog=${azurerm_sql_database.default.name};Persist Security Info=False;User ID=beershop;Password=${azurerm_sql_server.default.administrator_login_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
   }
 
-  #site_config {
-  #  linux_fx_version = "DOCKER|beershop.azurecr.io/beershop-app:${local.env.suffix}"
-  #  always_on        = local.env.app_alwayson
-  #}
+  site_config {
+   linux_fx_version = "DOCKER|beershop.azurecr.io/beershop-app:${local.env.suffix}"
+   always_on        = local.env.app_alwayson
+  }
 
-  #depends_on = [
-  #  azurerm_sql_database.default
-  #]
-
-  #tags = local.env.tags
+  tags = local.env.tags
 }
 
 # Application Insights
@@ -165,39 +161,35 @@ resource "azurerm_application_insights" "functions" {
 
 # Functions
 
-# resource "azurerm_function_app" "beershop" {
-#   name                       = "func-beershop-${local.env.suffix}"
-#   resource_group_name        = azurerm_resource_group.default.name
-#   location                   = azurerm_resource_group.default.location
-#   app_service_plan_id        = azurerm_app_service_plan.functions.id
-#   storage_account_name       = azurerm_storage_account.default.name
-#   storage_account_access_key = azurerm_storage_account.default.primary_access_key
-#   os_type                    = "linux"
-#   version                    = "~3"
+resource "azurerm_function_app" "beershop" {
+  name                       = "func-beershop-${local.env.suffix}"
+  resource_group_name        = azurerm_resource_group.default.name
+  location                   = azurerm_resource_group.default.location
+  app_service_plan_id        = azurerm_app_service_plan.functions.id
+  storage_account_name       = azurerm_storage_account.default.name
+  storage_account_access_key = azurerm_storage_account.default.primary_access_key
+  os_type                    = "linux"
+  version                    = "~3"
 
-#   app_settings = {
-#     DOCKER_ENABLE_CI                    = "true"
-#     APPINSIGHTS_INSTRUMENTATIONKEY      = azurerm_application_insights.functions.instrumentation_key
-#     WEBSITES_ENABLE_APP_SERVICE_STORAGE = false
-#     DOCKER_REGISTRY_SERVER_URL          = "https://beershop.azurecr.io"
-#     DOCKER_REGISTRY_SERVER_USERNAME     = "beershop"
-#     DOCKER_REGISTRY_SERVER_PASSWORD     = var.ACR_ADMIN_PASSWORD
-#     # beershop variables
-#     BEERSHOP_SQLSERVER_PASSWORD         = var.SQLSERVER_ADMIN_PASSWORD
-#     AzureWebJobsServiceBus              = azurerm_servicebus_namespace.default.default_primary_connection_string
-#     sqldb_connection                    = "Server=tcp:${azurerm_sql_server.default.name}.database.windows.net,1433;Initial Catalog=${azurerm_sql_database.default.name};Persist Security Info=False;User ID=beershop;Password=${azurerm_sql_server.default.administrator_login_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
-#   }
+  app_settings = {
+    DOCKER_ENABLE_CI                    = "true"
+    APPINSIGHTS_INSTRUMENTATIONKEY      = azurerm_application_insights.functions.instrumentation_key
+    WEBSITES_ENABLE_APP_SERVICE_STORAGE = false
+    DOCKER_REGISTRY_SERVER_URL          = "https://beershop.azurecr.io"
+    DOCKER_REGISTRY_SERVER_USERNAME     = "beershop"
+    DOCKER_REGISTRY_SERVER_PASSWORD     = var.ACR_ADMIN_PASSWORD
+    # beershop variables
+    BEERSHOP_SQLSERVER_PASSWORD         = var.SQLSERVER_ADMIN_PASSWORD
+    AzureWebJobsServiceBus              = azurerm_servicebus_namespace.default.default_primary_connection_string
+    sqldb_connection                    = "Server=tcp:${azurerm_sql_server.default.name}.database.windows.net,1433;Initial Catalog=${azurerm_sql_database.default.name};Persist Security Info=False;User ID=beershop;Password=${azurerm_sql_server.default.administrator_login_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+  }
 
-#   site_config {
-#     linux_fx_version = "DOCKER|beershop.azurecr.io/beershop-functions:${local.env.suffix}"
-#   }
+  site_config {
+    linux_fx_version = "DOCKER|beershop.azurecr.io/beershop-functions:${local.env.suffix}"
+  }
 
-#   depends_on = [
-#     azurerm_sql_database.default
-#   ]
-
-#   tags = local.env.tags
-# }
+  tags = local.env.tags
+}
 
 # Log Analytics
 
