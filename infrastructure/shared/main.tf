@@ -4,7 +4,7 @@ provider "azurerm" {
 }
 
 locals {
-  location = "eastus2"
+  location = "eastus"
   tags = {
     environment       = "shared"
     product           = "beershop"
