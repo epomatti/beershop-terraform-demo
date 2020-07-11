@@ -107,7 +107,6 @@ resource "azurerm_app_service_plan" "functions" {
   name                = "plan-beershop-functions-${local.env.suffix}"
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
-  os_type             = "Linux"
   kind                = "FunctionApp"
   reserved            = true
 
