@@ -1,4 +1,4 @@
-﻿@model app.Models.BeerOrder
+﻿@model Beershop.Models.BeerOrder
 @{
     ViewData["Title"] = "Buy";
 }
@@ -6,7 +6,7 @@
 <div class="text-center">
     <h1 class="display-5">Order your beer</h1>
 
-    @foreach (var beer in ViewData["Beers"] as IEnumerable<app.Beer>)
+    @foreach (var beer in ViewData["Beers"] as IEnumerable<Beershop.Beer>)
     {
         @using (Html.BeginForm("Buy", "Home", FormMethod.Post))
         { 

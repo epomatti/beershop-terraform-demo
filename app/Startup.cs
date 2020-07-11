@@ -4,10 +4,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
-using app.Repositories;
+using Beershop.Repositories;
 using System;
 
-namespace app
+namespace Beershop
 {
     public class Startup
     {
@@ -21,8 +21,8 @@ namespace app
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<MasterContext>(options =>
-                options.UseSqlServer(Configuration["sqldb_connection"]));
+            services.AddDbContext<BeershopContext>(options =>
+                options.UseNpgsql(Configuration["PSQL_CONNECTION_STRING"]));
 
             services.AddScoped<OrderRepository>();
             services.AddControllersWithViews();
@@ -52,7 +52,7 @@ namespace app
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
-            
+
             ApplyMigrations(app);
         }
 
@@ -62,9 +62,9 @@ namespace app
             Console.WriteLine("Starting migrations.");
             using (var serviceScope = app.ApplicationServices.CreateScope())
             {
-                using (var context = serviceScope.ServiceProvider.GetService<MasterContext>())
+                using (var context = serviceScope.ServiceProvider.GetService<BeershopContext>())
                 {
-                    
+
                     context.Database.Migrate();
                     Console.WriteLine("Migrations applied.");
                 }

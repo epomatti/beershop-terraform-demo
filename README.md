@@ -20,11 +20,11 @@ The following diagram shows all the resources provisioned with Terraform, plus a
 
 ### Database
 
-Pull and start SQL Server
+Pull and start PostgreSQL
 
 ```sh
-docker pull mcr.microsoft.com/mssql/server
-docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=StrongPassword#999' -p 1433:1433 -d mcr.microsoft.com/mssql/server
+docker pull postgres
+docker run --name some-postgres -e POSTGRES_PASSWORD="StrongPassword#999" -p 5432:5432 -d postgres
 ```
 
 ### App

@@ -1,30 +1,28 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.Extensions.Configuration;
 
-namespace app
+namespace Beershop
 {
-    public partial class MasterContext : DbContext
+    public partial class BeershopContext : DbContext
     {
+
+        public IConfiguration Configuration { get; }
         public DbSet<Beer> Beers { get; set; }
         public DbSet<Order> Orders { get; set; }
 
-        public MasterContext()
+        public BeershopContext(IConfiguration configuration)
         {
-        }
-
-        public MasterContext(DbContextOptions<MasterContext> options)
-            : base(options)
-        {
+            Configuration = configuration;
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Name=BeershopDatabase");
+                optionsBuilder.UseNpgsql(Configuration["PSQL_CONNECTION_STRING"]);
             }
         }
 

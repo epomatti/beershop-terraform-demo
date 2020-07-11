@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace app.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class postgres : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -26,6 +26,7 @@ namespace app.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     Processed = table.Column<bool>(nullable: false),
+                    CreatedAt = table.Column<DateTime>(nullable: false),
                     BeerId = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
@@ -42,17 +43,12 @@ namespace app.Migrations
             migrationBuilder.InsertData(
                 table: "Beers",
                 columns: new[] { "Id", "Name", "Price" },
-                values: new object[] { new Guid("e77b538b-9692-42fc-88c8-b999909e22f5"), "Stella", 0.0 });
-
-            migrationBuilder.InsertData(
-                table: "Beers",
-                columns: new[] { "Id", "Name", "Price" },
-                values: new object[] { new Guid("84503a25-2bee-4809-822a-6bf07f494bca"), "Budweiser", 0.0 });
-
-            migrationBuilder.InsertData(
-                table: "Beers",
-                columns: new[] { "Id", "Name", "Price" },
-                values: new object[] { new Guid("dfd14047-d6d2-4775-b553-7c1f056c8e9b"), "Becks", 0.0 });
+                values: new object[,]
+                {
+                    { new Guid("e000a08d-d4a2-480b-82f4-d63270f48fd8"), "Stella", 0.0 },
+                    { new Guid("ae190999-5ad5-4770-8a3e-6c17b59b6596"), "Budweiser", 0.0 },
+                    { new Guid("dce03f29-3bf2-4e8b-b095-33a6f9ebf941"), "Becks", 0.0 }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_BeerId",

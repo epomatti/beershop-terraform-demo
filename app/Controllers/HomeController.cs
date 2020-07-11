@@ -1,22 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using app.Models;
-using app.Repositories;
+using Beershop.Models;
+using Beershop.Repositories;
 
-namespace app.Controllers
+namespace Beershop.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
         private OrderRepository _repository;
-        private MasterContext _context;
+        private BeershopContext _context;
 
-        public HomeController(ILogger<HomeController> logger, OrderRepository _repository, MasterContext _context)
+        public HomeController(ILogger<HomeController> logger, OrderRepository _repository, BeershopContext _context)
         {
             _logger = logger;
             this._repository = _repository;

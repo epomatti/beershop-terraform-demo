@@ -1,22 +1,22 @@
 using System;
-using app.Models;
+using Beershop.Models;
 using System.Linq;
-using Microsoft.Azure.ServiceBus;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
+using Azure.Messaging.ServiceBus;
 
-namespace app.Repositories
+namespace Beershop.Repositories
 {
 
     public class OrderRepository
     {
 
-        private MasterContext _context;
+        private BeershopContext _context;
         private readonly IConfiguration _config;
-        
 
-        public OrderRepository(MasterContext context, IConfiguration config)
+
+        public OrderRepository(BeershopContext context, IConfiguration config)
         {
             this._context = context;
             this._config = config;
@@ -42,18 +42,12 @@ namespace app.Repositories
         }
 
         private async Task Enqueue(Guid orderId)
-        {            
-            IQueueClient queueClient = null;
-            try {
-                var connectionString = _config["SERVICE_BUS_CONNECTION_STRING"];
-                queueClient = new QueueClient(connectionString, "sbq-orders");
-                var message = new Message(Encoding.UTF8.GetBytes(orderId.ToString()));
-                await queueClient.SendAsync(message);
-            } finally {
-                if(queueClient != null) {
-                    await queueClient.CloseAsync();
-                }
-            }
+        {
+            var connectionString = _config["SERVICE_BUS_CONNECTION_STRING"];
+            await using var client = new ServiceBusClient(connectionString);
+            ServiceBusSender sender = client.CreateSender("sbq-orders");
+            ServiceBusMessage message = new ServiceBusMessage(Encoding.UTF8.GetBytes(orderId.ToString()));
+            await sender.SendMessageAsync(message);
         }
 
     }
