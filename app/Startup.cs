@@ -22,7 +22,7 @@ namespace app
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<MasterContext>(options =>
-                options.UseSqlServer(Configuration["environmentVariables:sqldb_connection"]));
+                options.UseSqlServer(Configuration["sqldb_connection"]));
 
             services.AddScoped<OrderRepository>();
             services.AddControllersWithViews();
@@ -58,6 +58,7 @@ namespace app
 
         private void ApplyMigrations(IApplicationBuilder app)
         {
+
             Console.WriteLine("Starting migrations.");
             using (var serviceScope = app.ApplicationServices.CreateScope())
             {
