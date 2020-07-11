@@ -143,6 +143,10 @@ resource "azurerm_app_service" "app" {
     always_on        = local.env.app_alwayson
   }
 
+  depends_on = [
+    azurerm_sql_database.default
+  ]
+
   tags = local.env.tags
 }
 
@@ -197,6 +201,10 @@ resource "azurerm_function_app" "beershop" {
   site_config {
     linux_fx_version = "DOCKER|beershop.azurecr.io/beershop-functions:${local.env.suffix}"
   }
+
+  depends_on = [
+    azurerm_sql_database.default
+  ]
 
   tags = local.env.tags
 }

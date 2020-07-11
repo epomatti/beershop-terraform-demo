@@ -29,7 +29,7 @@ docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=StrongPassword#999' -p 1433:1433 -
 
 ### Functions
 
-Create the `local.settings`
+Create the `local.settings` and enter configuration
 
 Start the function
 
@@ -40,10 +40,17 @@ func start
 
 ### App
 
+Create `appsettings.Development.json` and enter configuration
 
+Start the app
 
+sh
+```
+dotnet restore
+dotnet run
+```
 
-## Provisioning the Infrastructure
+### Infrastructure
 
 The infrastructure also has three modules:
 
@@ -54,6 +61,18 @@ The infrastructure also has three modules:
 To quickly Use Terraform Cloud with [infrastructure/enterprise](infrastructure/enterprise) module as a workspace. It uses the Terraform Enteprise Provider to automatically build the workspaces.
 
 You maybe also use the Terraform CLI or any other CI/CD tool.
+
+#### Manual steps
+
+1. Add Log Analytics to the App Service
+
+### New Environments
+
+If the shared environment is recreated add the new `ACR_ADMIN_PASSWORD` to the enterprise workspace.
+
+1. Add the matching database password to the enteprise workspace
+3. Add branch, worksking
+
 
 ## Extra
 
