@@ -3,6 +3,11 @@ provider "azurerm" {
   }
 }
 
+# Just to silence workspace error =)
+variable "ACR_ADMIN_PASSWORD" {
+  type = string
+}
+
 locals {
   location = "eastus"
   tags = {
