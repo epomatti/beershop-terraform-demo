@@ -88,30 +88,16 @@ resource "azurerm_servicebus_queue" "orders" {
 
 # App Service Plans
 
-resource "azurerm_app_service_plan" "app" {
-  name                = "plan-beershop-app-${local.env.suffix}"
+resource "azurerm_app_service_plan" "default" {
+  name                = "plan-beershop-${local.env.suffix}"
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
   kind                = "Linux"
   reserved            = true
 
   sku {
-    tier = local.env.plan_app_tier
-    size = local.env.plan_app_sku
-  }
-
-  tags = local.env.tags
-}
-
-resource "azurerm_app_service_plan" "functions" {
-  name                = "plan-beershop-functions-${local.env.suffix}"
-  resource_group_name = azurerm_resource_group.default.name
-  location            = azurerm_resource_group.default.location
-  kind                = "FunctionApp"
-
-  sku {
-    tier = "Dynamic"
-    size = "Y1"
+    tier = local.env.plan_tier
+    size = local.env.plan_sku
   }
 
   tags = local.env.tags
@@ -123,7 +109,7 @@ resource "azurerm_app_service" "app" {
   name                = "app-beershop-${local.env.suffix}"
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
-  app_service_plan_id = azurerm_app_service_plan.app.id
+  app_service_plan_id = azurerm_app_service_plan.default.id
 
   app_settings = {
     DOCKER_ENABLE_CI                                = "true"
@@ -164,7 +150,7 @@ resource "azurerm_function_app" "beershop" {
   name                       = "func-beershop-${local.env.suffix}"
   resource_group_name        = azurerm_resource_group.default.name
   location                   = azurerm_resource_group.default.location
-  app_service_plan_id        = azurerm_app_service_plan.functions.id
+  app_service_plan_id        = azurerm_app_service_plan.default.id
   storage_account_name       = azurerm_storage_account.default.name
   storage_account_access_key = azurerm_storage_account.default.primary_access_key
   os_type                    = "linux"
