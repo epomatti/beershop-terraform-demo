@@ -12,7 +12,7 @@ variable "ACR_ADMIN_PASSWORD" {
   type = string
 }
 
-variable "SQLSERVER_ADMIN_PASSWORD_DEVELOPMENT" {
+variable "PSQL_PASSWORD_DEVELOPMENT" {
   type = string
 }
 
@@ -68,11 +68,11 @@ resource "tfe_variable" "ACR_ADMIN_PASSWORD" {
 }
 
 
-# SQL Server
+# Database
 
-resource "tfe_variable" "SQLSERVER_ADMIN_PASSWORD_DEVELOPMENT" {
-  key          = "SQLSERVER_ADMIN_PASSWORD" 
-  value        = var.SQLSERVER_ADMIN_PASSWORD_DEVELOPMENT
+resource "tfe_variable" "PSQL_PASSWORD_DEVELOPMENT" {
+  key          = "PSQL_PASSWORD_DEVELOPMENT" 
+  value        = var.PSQL_PASSWORD_DEVELOPMENT
   category     = "terraform"
   workspace_id = tfe_workspace.workspaces[1].id
   sensitive    = true
