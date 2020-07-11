@@ -13,9 +13,7 @@ psql_storage_mb: 5120
 psql_backup_retention_days: 7
 psql_geo_redundant_backup_enabled: false
 psql_autogrow_enabled: false
-
-psql_vnet_start: 10.0.0.0
-psql_vnet_end: 10.0.0.255
+psql_public_network_access_enabled: true
 
 # Service Bus
 bus_sku: Basic

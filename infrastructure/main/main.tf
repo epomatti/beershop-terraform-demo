@@ -83,7 +83,7 @@ resource "azurerm_postgresql_server" "default" {
   geo_redundant_backup_enabled = local.env.psql_geo_redundant_backup_enabled
   auto_grow_enabled            = local.env.psql_autogrow_enabled
 
-  public_network_access_enabled    = false
+  public_network_access_enabled    = local.env.psql_public_network_access_enabled
   ssl_enforcement_enabled          = true
   ssl_minimal_tls_version_enforced = "TLS1_2"
 
@@ -102,8 +102,10 @@ resource "azurerm_postgresql_firewall_rule" "default" {
   name                = "psql-firewall"
   resource_group_name = azurerm_resource_group.default.name
   server_name         = azurerm_postgresql_server.default.name
-  start_ip_address    = local.env.psql_vnet_start
-  end_ip_address      = local.env.psql_vnet_end
+
+  # Allows Azure endpoints
+  start_ip_address    = 0.0.0.0
+  end_ip_address      = 0.0.0.0
 }
 
 # Service Bus
@@ -158,7 +160,7 @@ resource "azurerm_app_service" "app" {
     BEERSHOP_SERVICEBUS_SECONDARY_CONNECTION_STRING = azurerm_servicebus_namespace.default.default_secondary_connection_string
     BEERSHOP_SERVICEBUS_CONNECTION_STRING           = local.env.app_servicebus_connection_string
     PGUSER                                          = "beershop"
-    PGHOST                                          = "${azurerm_postgresql_server.default.name}"
+    PGHOST                                          = "${azurerm_postgresql_server.default.name}.postgres.database.azure.com"
     PGPASSWORD                                      = var.PSQL_PASSWORD
     PGDATABASE                                      = "beershop"
     PGPORT                                          = 5432
@@ -204,7 +206,7 @@ resource "azurerm_function_app" "beershop" {
     DOCKER_REGISTRY_SERVER_PASSWORD     = var.ACR_ADMIN_PASSWORD
     AzureWebJobsServiceBus              = azurerm_servicebus_namespace.default.default_primary_connection_string
     PGUSER                              = "beershop"
-    PGHOST                              = "${azurerm_postgresql_server.default.name}"
+    PGHOST                              = "${azurerm_postgresql_server.default.name}.postgres.database.azure.com"
     PGPASSWORD                          = var.PSQL_PASSWORD
     PGDATABASE                          = "beershop"
     PGPORT                              = 5432
