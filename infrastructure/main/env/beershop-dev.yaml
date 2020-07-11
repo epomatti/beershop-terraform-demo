@@ -7,10 +7,15 @@ rg_location: eastus
 # Storage Account
 st_replication: "LRS"
 
-# SQL Server
-sql_public_access_enabled: true
-sql_sku_name: Basic
-sql_zone_redudant: false
+# Postgres
+psql_sku_name: B_Gen5_1
+psql_storage_mb: 5120
+psql_backup_retention_days: 7
+psql_geo_redundant_backup_enabled: false
+psql_autogrow_enabled: false
+
+psql_vnet_start: 10.0.0.0
+psql_vnet_end: 10.0.0.255
 
 # Service Bus
 bus_sku: Basic

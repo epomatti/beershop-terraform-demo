@@ -9,7 +9,7 @@ variable "TFC_WORKSPACE_NAME" {
   type = string
 }
 
-variable "SQLSERVER_ADMIN_PASSWORD" {
+variable "PSQL_PASSWORD" {
   type = string
 }
 
@@ -54,10 +54,10 @@ resource "azurerm_virtual_network" "vnet" {
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
 
-    tags = local.env.tags
+  tags = local.env.tags
 }
 
-resource "azurerm_subnet" "subnet" {
+resource "azurerm_subnet" "internal" {
   name                 = "snet-beershop-${local.env.suffix}"
   resource_group_name  = azurerm_resource_group.default.name
   virtual_network_name = azurerm_virtual_network.vnet.name
@@ -65,27 +65,45 @@ resource "azurerm_subnet" "subnet" {
   service_endpoints    = ["Microsoft.Sql"]
 }
 
-# SQL Server
+# Postgres
 
-resource "azurerm_mssql_server" "default" {
-  name                          = "sql-beershop-${local.env.suffix}"
-  resource_group_name           = azurerm_resource_group.default.name
-  location                      = azurerm_resource_group.default.location
-  version                       = "12.0"
-  administrator_login           = "beershop"
-  administrator_login_password  = var.SQLSERVER_ADMIN_PASSWORD
-  public_network_access_enabled = local.env.sql_public_access_enabled
+resource "azurerm_postgresql_server" "default" {
+  name                = "psql-beershop-${local.env.suffix}"
+  resource_group_name = azurerm_resource_group.default.name
+  location            = azurerm_resource_group.default.location
+
+  administrator_login          = "beershop"
+  administrator_login_password = var.PSQL_PASSWORD
+
+  sku_name   = local.env.psql_sku_name
+  version    = 11
+  storage_mb = local.env.psql_storage_mb
+
+  backup_retention_days        = local.env.psql_backup_retention_days
+  geo_redundant_backup_enabled = local.env.psql_geo_redundant_backup_enabled
+  auto_grow_enabled            = local.env.psql_autogrow_enabled
+
+  public_network_access_enabled    = false
+  ssl_enforcement_enabled          = true
+  ssl_minimal_tls_version_enforced = "TLS1_2"
 
   tags = local.env.tags
 }
 
-resource "azurerm_mssql_database" "default" {
-  name                = "sqldb-beershop-${local.env.suffix}"
-  server_id           = azurerm_mssql_server.default.id
-  sku_name            = local.env.sql_sku_name
-  zone_redundant      = local.env.sql_zone_redudant
+resource "azurerm_postgresql_virtual_network_rule" "default" {
+  name                                 = "postgresql-vnet-rule"
+  resource_group_name                  = azurerm_resource_group.default.name
+  server_name                          = azurerm_postgresql_server.default.name
+  subnet_id                            = azurerm_subnet.internal.id
+  ignore_missing_vnet_service_endpoint = true
+}
 
-  tags = local.env.tags
+resource "azurerm_postgresql_firewall_rule" "default" {
+  name                = "psql-firewall"
+  resource_group_name = azurerm_resource_group.default.name
+  server_name         = azurerm_postgresql_server.default.name
+  start_ip_address    = local.env.psql_vnet_start
+  end_ip_address      = local.env.psql_vnet_end
 }
 
 # Service Bus
@@ -131,16 +149,19 @@ resource "azurerm_app_service" "app" {
   app_service_plan_id = azurerm_app_service_plan.default.id
 
   app_settings = {
-    DOCKER_ENABLE_CI                                = "true"
+    DOCKER_ENABLE_CI                                = true
     WEBSITES_ENABLE_APP_SERVICE_STORAGE             = false
     DOCKER_REGISTRY_SERVER_URL                      = "https://beershop.azurecr.io"
     DOCKER_REGISTRY_SERVER_USERNAME                 = "beershop"
     DOCKER_REGISTRY_SERVER_PASSWORD                 = var.ACR_ADMIN_PASSWORD
-    sqldb_connection                                = "Server=tcp:${azurerm_mssql_server.default.name}.database.windows.net,1433;Initial Catalog=${azurerm_mssql_database.default.name};Persist Security Info=False;User ID=beershop;Password=${azurerm_mssql_server.default.administrator_login_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
-    BEERSHOP_SQLSERVER_PASSWORD                     = var.SQLSERVER_ADMIN_PASSWORD
     BEERSHOP_SERVICEBUS_PRIMARY_CONNECTION_STRING   = azurerm_servicebus_namespace.default.default_primary_connection_string
     BEERSHOP_SERVICEBUS_SECONDARY_CONNECTION_STRING = azurerm_servicebus_namespace.default.default_secondary_connection_string
     BEERSHOP_SERVICEBUS_CONNECTION_STRING           = local.env.app_servicebus_connection_string
+    PGUSER                                          = "beershop"
+    PGHOST                                          = "${azurerm_postgresql_server.default.name}"
+    PGPASSWORD                                      = var.PSQL_PASSWORD
+    PGDATABASE                                      = "beershop"
+    PGPORT                                          = 5432
   }
 
   site_config {
@@ -175,17 +196,18 @@ resource "azurerm_function_app" "beershop" {
   version                    = "~3"
 
   app_settings = {
-    DOCKER_ENABLE_CI                    = "true"
+    DOCKER_ENABLE_CI                    = true
     APPINSIGHTS_INSTRUMENTATIONKEY      = azurerm_application_insights.functions.instrumentation_key
     WEBSITES_ENABLE_APP_SERVICE_STORAGE = false
     DOCKER_REGISTRY_SERVER_URL          = "https://beershop.azurecr.io"
     DOCKER_REGISTRY_SERVER_USERNAME     = "beershop"
     DOCKER_REGISTRY_SERVER_PASSWORD     = var.ACR_ADMIN_PASSWORD
     AzureWebJobsServiceBus              = azurerm_servicebus_namespace.default.default_primary_connection_string
-    BEERSHOP_SQLSERVER_USERNAME         = "beershop"
-    BEERSHOP_SQLSERVER_PASSWORD         = var.SQLSERVER_ADMIN_PASSWORD
-    BEERSHOP_SQLSERVER_SERVER           = "${azurerm_mssql_server.default.name}.database.windows.net"
-    BEERSHOP_SQLSERVER_DATABASE         = azurerm_mssql_database.default.name
+    PGUSER                              = "beershop"
+    PGHOST                              = "${azurerm_postgresql_server.default.name}"
+    PGPASSWORD                          = var.PSQL_PASSWORD
+    PGDATABASE                          = "beershop"
+    PGPORT                              = 5432
   }
 
   site_config {
