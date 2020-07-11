@@ -67,40 +67,26 @@ resource "azurerm_subnet" "subnet" {
 
 # SQL Server
 
-resource "azurerm_sql_server" "default" {
-  name                         = "sql-beershop-${local.env.suffix}"
-  resource_group_name          = azurerm_resource_group.default.name
-  location                     = azurerm_resource_group.default.location
-  version                      = "12.0"
-  administrator_login          = "beershop"
-  administrator_login_password = var.SQLSERVER_ADMIN_PASSWORD
+resource "azurerm_mssql_server" "default" {
+  name                          = "sql-beershop-${local.env.suffix}"
+  resource_group_name           = azurerm_resource_group.default.name
+  location                      = azurerm_resource_group.default.location
+  version                       = "12.0"
+  administrator_login           = "beershop"
+  administrator_login_password  = var.SQLSERVER_ADMIN_PASSWORD
+  public_network_access_enabled = local.env.sql_public_access_enabled
 
   tags = local.env.tags
 }
 
-resource "azurerm_sql_database" "default" {
+resource "azurerm_mssql_database" "default" {
   name                = "sqldb-beershop-${local.env.suffix}"
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
-  server_name         = azurerm_sql_server.default.name
+  server_name         = azurerm_mssql_server.default.name
   edition             = local.env.sqldb_edition
 
   tags = local.env.tags
-}
-
-resource "azurerm_sql_virtual_network_rule" "sqlvnetrule" {
-  name                = "sql-vnet-rule"
-  resource_group_name = azurerm_resource_group.default.name
-  server_name         = azurerm_sql_server.default.name
-  subnet_id           = azurerm_subnet.subnet.id
-}
-
-resource "azurerm_sql_firewall_rule" "vnet-rule" {
-  name                = "FirewallRuleVNet"
-  resource_group_name = azurerm_resource_group.default.name
-  server_name         = azurerm_sql_server.default.name
-  start_ip_address    = "10.0.0.0"
-  end_ip_address      = "10.0.0.255"
 }
 
 # Service Bus
@@ -151,7 +137,7 @@ resource "azurerm_app_service" "app" {
     DOCKER_REGISTRY_SERVER_URL                      = "https://beershop.azurecr.io"
     DOCKER_REGISTRY_SERVER_USERNAME                 = "beershop"
     DOCKER_REGISTRY_SERVER_PASSWORD                 = var.ACR_ADMIN_PASSWORD
-    sqldb_connection                                = "Server=tcp:${azurerm_sql_server.default.name}.database.windows.net,1433;Initial Catalog=${azurerm_sql_database.default.name};Persist Security Info=False;User ID=beershop;Password=${azurerm_sql_server.default.administrator_login_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+    sqldb_connection                                = "Server=tcp:${azurerm_mssql_server.default.name}.database.windows.net,1433;Initial Catalog=${azurerm_mssql_database.default.name};Persist Security Info=False;User ID=beershop;Password=${azurerm_mssql_server.default.administrator_login_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
     BEERSHOP_SQLSERVER_PASSWORD                     = var.SQLSERVER_ADMIN_PASSWORD
     BEERSHOP_SERVICEBUS_PRIMARY_CONNECTION_STRING   = azurerm_servicebus_namespace.default.default_primary_connection_string
     BEERSHOP_SERVICEBUS_SECONDARY_CONNECTION_STRING = azurerm_servicebus_namespace.default.default_secondary_connection_string
@@ -199,8 +185,8 @@ resource "azurerm_function_app" "beershop" {
     AzureWebJobsServiceBus              = azurerm_servicebus_namespace.default.default_primary_connection_string
     BEERSHOP_SQLSERVER_USERNAME         = "beershop"
     BEERSHOP_SQLSERVER_PASSWORD         = var.SQLSERVER_ADMIN_PASSWORD
-    BEERSHOP_SQLSERVER_SERVER           = "${azurerm_sql_server.default.name}.database.windows.net"
-    BEERSHOP_SQLSERVER_DATABASE         = azurerm_sql_database.default.name
+    BEERSHOP_SQLSERVER_SERVER           = "${azurerm_mssql_server.default.name}.database.windows.net"
+    BEERSHOP_SQLSERVER_DATABASE         = azurerm_mssql_database.default.name
   }
 
   site_config {

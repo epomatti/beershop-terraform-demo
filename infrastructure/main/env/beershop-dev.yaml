@@ -9,6 +9,7 @@ st_replication: "LRS"
 
 # SQL Server
 sqldb_edition: Basic
+sql_public_access_enabled: true
 
 # Service Bus
 bus_sku: Basic
