@@ -179,7 +179,7 @@ resource "azurerm_function_app" "beershop" {
 # Log Analytics
 
 resource "azurerm_log_analytics_workspace" "app" {
-  name                = "log-beershop-app-${local.env.suffix}"
+  name                = "log-beershop-webapp-${local.env.suffix}"
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
   sku                 = "PerGB2018"
