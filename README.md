@@ -16,7 +16,7 @@ The following diagram shows all the resources provisioned with Terraform, plus a
 
 ## Local Development
 
-<u>Requirements</u>: Docker, Azure Functions Core Tools, Dotnet 3.1
+<u>Requirements</u>: Docker, Azure Functions Core Tools, Node, TypeScript, Dotnet 3.1
 
 ### Database
 
@@ -27,20 +27,9 @@ docker pull mcr.microsoft.com/mssql/server
 docker run -e 'ACCEPT_EULA=Y' -e 'SA_PASSWORD=StrongPassword#999' -p 1433:1433 -d mcr.microsoft.com/mssql/server
 ```
 
-### Functions
-
-Create the `local.settings` and enter configuration
-
-Start the function
-
-```sh
-dotnet restore
-func start
-```
-
 ### App
 
-Create `appsettings.Development.json` and enter configuration
+Create `appsettings.Development.json` from the template and manually enter the Service Bus connection string.
 
 Start the app
 
@@ -49,6 +38,21 @@ sh
 dotnet restore
 dotnet run
 ```
+
+Migrations will be applied at runtime.
+
+### Functions
+
+Create the `local.settings.json` from the template and manually enter the Service Bus connection string.
+
+Start the function
+
+```sh
+npm i
+npm start
+```
+
+Don't forget to run the dotnet app first for the required migrations.
 
 ### Infrastructure
 

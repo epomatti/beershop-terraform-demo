@@ -1,9 +1,0 @@
-{
-    "IsEncrypted": false,
-    "Values": {
-        "AzureWebJobsStorage": "UseDevelopmentStorage=true",
-        "FUNCTIONS_WORKER_RUNTIME": "dotnet",
-        "AzureWebJobsServiceBus" : "<AzureWebJobsServiceBus>",
-        "sqldb_connection" : "Server=localhost,1433; Database=Master; User=sa; Password =StrongPassword#999;"
-    }
-}

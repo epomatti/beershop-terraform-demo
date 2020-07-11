@@ -1,0 +1,12 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "FUNCTIONS_WORKER_RUNTIME": "node",
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "AzureWebJobsServiceBus": "<AzureWebJobsServiceBus>",
+    "BEERSHOP_MSSQL_USERNAME": "sa",
+    "BEERSHOP_MSSQL_PASSWORD": "StrongPassword#999",
+    "BEERSHOP_MSSQL_SERVER": "localhost",
+    "BEERSHOP_MSSQL_DATABASE": "Master"
+  }
+}

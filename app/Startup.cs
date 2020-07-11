@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using app.Repositories;
+using System;
 
 namespace app
 {
@@ -57,11 +58,14 @@ namespace app
 
         private void ApplyMigrations(IApplicationBuilder app)
         {
+            Console.WriteLine("Starting migrations.");
             using (var serviceScope = app.ApplicationServices.CreateScope())
             {
                 using (var context = serviceScope.ServiceProvider.GetService<MasterContext>())
                 {
+                    
                     context.Database.Migrate();
+                    Console.WriteLine("Migrations applied.");
                 }
             }
         }

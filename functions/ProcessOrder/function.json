@@ -1,0 +1,12 @@
+{
+  "bindings": [
+    {
+      "name": "mySbMsg",
+      "type": "serviceBusTrigger",
+      "direction": "in",
+      "queueName": "sbq-orders",
+      "connection": "AzureWebJobsServiceBus"
+    }
+  ],
+  "scriptFile": "../dist/ProcessOrder/index.js"
+}
