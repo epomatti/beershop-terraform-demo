@@ -159,7 +159,7 @@ resource "azurerm_app_service" "app" {
     BEERSHOP_SERVICEBUS_PRIMARY_CONNECTION_STRING   = azurerm_servicebus_namespace.default.default_primary_connection_string
     BEERSHOP_SERVICEBUS_SECONDARY_CONNECTION_STRING = azurerm_servicebus_namespace.default.default_secondary_connection_string
     BEERSHOP_SERVICEBUS_CONNECTION_STRING           = local.env.app_servicebus_connection_string
-    PGUSER                                          = "beershop"
+    PGUSER                                          = "beershop@${azurerm_postgresql_server.default.name}"
     PGHOST                                          = "${azurerm_postgresql_server.default.name}.postgres.database.azure.com"
     PGPASSWORD                                      = var.PSQL_PASSWORD
     PGDATABASE                                      = "beershop"
@@ -205,7 +205,7 @@ resource "azurerm_function_app" "beershop" {
     DOCKER_REGISTRY_SERVER_USERNAME     = "beershop"
     DOCKER_REGISTRY_SERVER_PASSWORD     = var.ACR_ADMIN_PASSWORD
     AzureWebJobsServiceBus              = azurerm_servicebus_namespace.default.default_primary_connection_string
-    PGUSER                              = "beershop"
+    PGUSER                              = "beershop@${azurerm_postgresql_server.default.name}"
     PGHOST                              = "${azurerm_postgresql_server.default.name}.postgres.database.azure.com"
     PGPASSWORD                          = var.PSQL_PASSWORD
     PGDATABASE                          = "beershop"
