@@ -22,7 +22,7 @@ namespace Beershop
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<BeershopContext>(options =>
-                options.UseNpgsql(Configuration["PSQL_CONNECTION_STRING"]));
+                options.UseNpgsql(DatabaseConnection.GetConnectionString(Configuration)));
 
             services.AddScoped<OrderRepository>();
             services.AddControllersWithViews();

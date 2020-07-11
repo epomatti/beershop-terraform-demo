@@ -4,9 +4,10 @@
     "FUNCTIONS_WORKER_RUNTIME": "node",
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "AzureWebJobsServiceBus": "",
-    "BEERSHOP_SQLSERVER_USERNAME": "sa",
-    "BEERSHOP_SQLSERVER_PASSWORD": "StrongPassword#999",
-    "BEERSHOP_SQLSERVER_SERVER": "localhost",
-    "BEERSHOP_SQLSERVER_DATABASE": "Master"
+    "PGUSER": "postgres",
+    "PGHOST": "localhost",
+    "PGPASSWORD": "StrongPassword#999",
+    "PGDATABASE": "pg",
+    "PGPORT": 5432
   }
 }

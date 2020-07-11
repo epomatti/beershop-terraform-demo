@@ -8,21 +8,20 @@ namespace Beershop
 {
     public partial class BeershopContext : DbContext
     {
-
-        public IConfiguration Configuration { get; }
+        public IConfiguration _configuration { get; }
         public DbSet<Beer> Beers { get; set; }
         public DbSet<Order> Orders { get; set; }
 
         public BeershopContext(IConfiguration configuration)
         {
-            Configuration = configuration;
+            _configuration = configuration;
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseNpgsql(Configuration["PSQL_CONNECTION_STRING"]);
+                optionsBuilder.UseNpgsql(DatabaseConnection.GetConnectionString(_configuration));
             }
         }
 
