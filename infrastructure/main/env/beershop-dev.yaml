@@ -21,9 +21,6 @@ plan_app_sku: B1
 app_alwayson: false
 app_servicebus_connection_string: primary
 
-# Functions
-functions_alwayson: false
-
 # Tags
 tags:
   system: beershop
