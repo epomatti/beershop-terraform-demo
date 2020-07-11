@@ -3,7 +3,7 @@ provider "azurerm" {
   }
 }
 
-# Variables
+# Terraform Variables
 
 variable "TFC_WORKSPACE_NAME" {
   type = string
@@ -16,6 +16,8 @@ variable "SQLSERVER_ADMIN_PASSWORD" {
 variable "ACR_ADMIN_PASSWORD" {
   type = string
 }
+
+# Environment Parameters
 
 locals {
   env = merge(
@@ -161,18 +163,6 @@ resource "azurerm_application_insights" "functions" {
   tags = local.env.tags
 }
 
-# Log Analytics
-
-resource "azurerm_log_analytics_workspace" "app" {
-  name                = "log-beershop-app-${local.env.suffix}"
-  resource_group_name = azurerm_resource_group.default.name
-  location            = azurerm_resource_group.default.location
-  sku                 = "PerGB2018"
-  retention_in_days   = 30
-
-  tags = local.env.tags
-}
-
 # Functions
 
 resource "azurerm_function_app" "beershop" {
@@ -205,6 +195,18 @@ resource "azurerm_function_app" "beershop" {
   depends_on = [
     azurerm_sql_database.default
   ]
+
+  tags = local.env.tags
+}
+
+# Log Analytics
+
+resource "azurerm_log_analytics_workspace" "app" {
+  name                = "log-beershop-app-${local.env.suffix}"
+  resource_group_name = azurerm_resource_group.default.name
+  location            = azurerm_resource_group.default.location
+  sku                 = "PerGB2018"
+  retention_in_days   = 30
 
   tags = local.env.tags
 }
