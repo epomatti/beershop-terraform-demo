@@ -8,7 +8,7 @@ rg_location: eastus
 st_replication: "LRS"
 
 # Postgres
-psql_sku_name: B_Gen5_1
+psql_sku_name: GP_Gen5_2
 psql_storage_mb: 5120
 psql_backup_retention_days: 7
 psql_geo_redundant_backup_enabled: false
