@@ -11,7 +11,7 @@ namespace Beershop
             var password = Configuration["PGPASSWORD"];
             var database = Configuration["PGDATABASE"];
             var port = Configuration["PGPORT"];
-            return $"Host={host};Port={port};Username={user};Password={password};Database={database};SSL Mode=prefer";
+            return $"Host={host};Port={port};Username={user};Password={password};Database={database};SSL Mode=Prefer";
         }
     }
 }
