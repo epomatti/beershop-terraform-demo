@@ -40,4 +40,5 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           dev
+          staging
           prod
