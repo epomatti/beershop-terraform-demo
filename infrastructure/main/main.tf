@@ -167,7 +167,7 @@ resource "azurerm_app_service" "app" {
   }
 
   site_config {
-   linux_fx_version = "DOCKER|beershop.azurecr.io/beershop-app:${local.env.suffix}"
+   linux_fx_version = "DOCKER|beershop.azurecr.io/beershop-app:latest"
    always_on        = local.env.app_alwayson
   }
 
@@ -213,7 +213,7 @@ resource "azurerm_function_app" "beershop" {
   }
 
   site_config {
-    linux_fx_version = "DOCKER|beershop.azurecr.io/beershop-functions:${local.env.suffix}"
+    linux_fx_version = "DOCKER|beershop.azurecr.io/beershop-functions:latest"
   }
 
   tags = local.env.tags

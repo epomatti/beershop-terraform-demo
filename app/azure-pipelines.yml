@@ -39,6 +39,4 @@ stages:
         dockerfile: $(dockerfilePath)
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
-          dev
-          staging
-          prod
+          latest
