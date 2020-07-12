@@ -43,7 +43,7 @@ namespace Beershop.Repositories
 
         private async Task Enqueue(Guid orderId)
         {
-            var connectionString = _config["SERVICE_BUS_CONNECTION_STRING"];
+            var connectionString = _config["BEERSHOP_SERVICEBUS_PRIMARY_CONNECTION_STRING"];
             await using var client = new ServiceBusClient(connectionString);
             ServiceBusSender sender = client.CreateSender("sbq-orders");
             ServiceBusMessage message = new ServiceBusMessage(Encoding.UTF8.GetBytes(orderId.ToString()));
