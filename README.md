@@ -1,6 +1,6 @@
 # Beer Shop
 
-A demo project showcasing Terraform features on top of Azure.
+A demo project showcasing Terraform features with Azure cloud.
 
 This demo is composed of three main modules:
 
@@ -16,7 +16,7 @@ The following diagram shows all the resources provisioned with Terraform, plus a
 
 ## Local Development
 
-<u>Requirements</u>: Docker, Azure Functions Core Tools, Node, TypeScript, Dotnet 3.1
+<u>Requirements</u>: Docker, Azure Functions Core Tools, Node, TypeScript, .NET Core 3.1
 
 ### Database
 
@@ -33,8 +33,7 @@ Create `appsettings.Development.json` from the template and manually enter the S
 
 Start the app
 
-sh
-```
+```sh
 dotnet restore
 dotnet run
 ```
@@ -62,9 +61,9 @@ The infrastructure also has three modules:
 - **Main** - The resources of the solution
 - **Shared** - Resources shared accross main environments (dev, qa, prod, etc)
 
-To quickly Use Terraform Cloud with [infrastructure/enterprise](infrastructure/enterprise) module as a workspace. It uses the Terraform Enteprise Provider to automatically build the workspaces.
+Use Terraform Cloud with [infrastructure/enterprise](infrastructure/enterprise) module as a workspace. It implements the Terraform Enteprise Provider to automatically build the workspaces.
 
-You maybe also use the Terraform CLI or any other CI/CD tool.
+You may also use the Terraform CLI or any other CI/CD tool.
 
 #### Manual steps
 
@@ -72,7 +71,7 @@ You maybe also use the Terraform CLI or any other CI/CD tool.
 
 ### New Environments
 
-If the shared environment is recreated add the new `ACR_ADMIN_PASSWORD` to the enterprise workspace.
+If the shared environment is recreated, add the new `ACR_ADMIN_PASSWORD` to the enterprise workspace.
 
 1. Add the matching database password to the enteprise workspace
 3. Add branch, worksking
