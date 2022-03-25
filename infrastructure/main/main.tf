@@ -1,3 +1,12 @@
+terraform {
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "=3.0.1"
+    }
+  }
+}
+
 provider "azurerm" {
   features {
   }
@@ -5,23 +14,30 @@ provider "azurerm" {
 
 # Terraform Variables
 
-variable "TFC_WORKSPACE_NAME" {
-  type = string
+variable "ENVIRONMENT" {
+  type        = string
+  description = "The environment key to be used to retrieve .yml values for the local values"
+  sensitive   = false
 }
 
 variable "PSQL_PASSWORD" {
-  type = string
+  type        = string
+  description = "PostgreSQL password that needs to be provided in advance."
+  sensitive   = true
 }
 
+
 variable "ACR_ADMIN_PASSWORD" {
-  type = string
+  type        = string
+  description = "The password to connect to to the shared Azure Container Registry instance."
+  sensitive   = true
 }
 
 # Environment Parameters
 
 locals {
   env = merge(
-    yamldecode(file("env/${var.TFC_WORKSPACE_NAME}.yaml"))
+    yamldecode(file("env/${var.ENVIRONMENT}.yaml"))
   )
 }
 
@@ -31,7 +47,7 @@ resource "azurerm_resource_group" "default" {
   name     = "beershop-${local.env.suffix}"
   location = local.env.rg_location
 
-  tags     = local.env.tags
+  tags = local.env.tags
 }
 
 # Storage Account
@@ -104,8 +120,8 @@ resource "azurerm_postgresql_firewall_rule" "default" {
   server_name         = azurerm_postgresql_server.default.name
 
   # Allows Azure endpoints
-  start_ip_address    = "0.0.0.0"
-  end_ip_address      = "0.0.0.0"
+  start_ip_address = "0.0.0.0"
+  end_ip_address   = "0.0.0.0"
 }
 
 # Service Bus
@@ -120,35 +136,29 @@ resource "azurerm_servicebus_namespace" "default" {
 }
 
 resource "azurerm_servicebus_queue" "orders" {
-  name                = "sbq-orders"
-  resource_group_name = azurerm_resource_group.default.name
-  namespace_name      = azurerm_servicebus_namespace.default.name
+  name         = "sbq-orders"
+  namespace_id = azurerm_servicebus_namespace.default.id
 }
 
 # App Service Plans
 
-resource "azurerm_app_service_plan" "default" {
+resource "azurerm_service_plan" "default" {
   name                = "plan-beershop-${local.env.suffix}"
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
-  kind                = "Linux"
-  reserved            = true
-
-  sku {
-    tier = local.env.plan_tier
-    size = local.env.plan_sku
-  }
+  os_type             = "Linux"
+  sku_name            = local.env.plan_sku
 
   tags = local.env.tags
 }
 
 # Web Apps
 
-resource "azurerm_app_service" "app" {
+resource "azurerm_linux_web_app" "app" {
   name                = "app-beershop-${local.env.suffix}"
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
-  app_service_plan_id = azurerm_app_service_plan.default.id
+  service_plan_id     = azurerm_service_plan.default.id
 
   app_settings = {
     DOCKER_ENABLE_CI                                = true
@@ -167,8 +177,11 @@ resource "azurerm_app_service" "app" {
   }
 
   site_config {
-   linux_fx_version = "DOCKER|beershop.azurecr.io/beershop-app:latest"
-   always_on        = local.env.app_alwayson
+    always_on = local.env.app_alwayson
+    application_stack {
+      docker_image     = "beershop-app"
+      docker_image_tag = "latest"
+    }
   }
 
   tags = local.env.tags
@@ -187,23 +200,18 @@ resource "azurerm_application_insights" "functions" {
 
 # Functions
 
-resource "azurerm_function_app" "beershop" {
-  name                       = "func-beershop-${local.env.suffix}"
-  resource_group_name        = azurerm_resource_group.default.name
-  location                   = azurerm_resource_group.default.location
-  app_service_plan_id        = azurerm_app_service_plan.default.id
-  storage_account_name       = azurerm_storage_account.default.name
-  storage_account_access_key = azurerm_storage_account.default.primary_access_key
-  os_type                    = "linux"
-  version                    = "~3"
+resource "azurerm_linux_function_app" "beershop" {
+  name                = "func-beershop-${local.env.suffix}"
+  resource_group_name = azurerm_resource_group.default.name
+  location            = azurerm_resource_group.default.location
+
+  storage_account_name = azurerm_storage_account.default.name
+  service_plan_id      = azurerm_service_plan.default.id
 
   app_settings = {
     DOCKER_ENABLE_CI                    = true
     APPINSIGHTS_INSTRUMENTATIONKEY      = azurerm_application_insights.functions.instrumentation_key
     WEBSITES_ENABLE_APP_SERVICE_STORAGE = false
-    DOCKER_REGISTRY_SERVER_URL          = "https://beershop.azurecr.io"
-    DOCKER_REGISTRY_SERVER_USERNAME     = "beershop"
-    DOCKER_REGISTRY_SERVER_PASSWORD     = var.ACR_ADMIN_PASSWORD
     AzureWebJobsServiceBus              = azurerm_servicebus_namespace.default.default_primary_connection_string
     PGUSER                              = "beershop@${azurerm_postgresql_server.default.name}"
     PGHOST                              = "${azurerm_postgresql_server.default.name}.postgres.database.azure.com"
@@ -213,8 +221,17 @@ resource "azurerm_function_app" "beershop" {
   }
 
   site_config {
-    linux_fx_version = "DOCKER|beershop.azurecr.io/beershop-functions:latest"
+    application_stack {
+      docker {
+        registry_url      = "https://beershop.azurecr.io"
+        image_name        = "beershop-functions"
+        image_tag         = "latest"
+        registry_username = "beershop"
+        registry_password = var.ACR_ADMIN_PASSWORD
+      }
+    }
   }
+
 
   tags = local.env.tags
 }

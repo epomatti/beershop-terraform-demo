@@ -2,7 +2,7 @@
 suffix: dev
 
 # Resource Group
-rg_location: eastus
+rg_location: eastus2
 
 # Storage Account
 st_replication: "LRS"
@@ -19,7 +19,6 @@ psql_public_network_access_enabled: true
 bus_sku: Basic
 
 # App Plans
-plan_tier: Standard
 plan_sku: S1
 
 # Web Apps

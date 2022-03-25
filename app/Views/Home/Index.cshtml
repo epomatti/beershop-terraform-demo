@@ -1,19 +1,8 @@
-﻿@model Beershop.Models.BeerOrder
-@{
-    ViewData["Title"] = "Buy";
+﻿@{
+    ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-5">Order your beer</h1>
-
-    @foreach (var beer in ViewData["Beers"] as IEnumerable<Beershop.Beer>)
-    {
-        @using (Html.BeginForm("Buy", "Home", FormMethod.Post))
-        { 
-            @beer.Name
-            <input type="hidden" name="BeerId" value="@beer.Id" />
-            <input type="submit" class="btn-primary" value="Buy"/>
-        }
-    }
-
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>

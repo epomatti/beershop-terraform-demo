@@ -1,0 +1,19 @@
+﻿@model Beershop.Models.BeerOrder
+@{
+    ViewData["Title"] = "Buy";
+}
+
+<div class="text-center">
+    <h1 class="display-5">Order your beer</h1>
+
+    @foreach (var beer in ViewData["Beers"] as IEnumerable<Beershop.Beer>)
+    {
+        @using (Html.BeginForm("Buy", "Home", FormMethod.Post))
+        { 
+            @beer.Name
+            <input type="hidden" name="BeerId" value="@beer.Id" />
+            <input type="submit" class="btn-primary" value="Buy"/>
+        }
+    }
+
+</div>

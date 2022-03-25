@@ -1,18 +1,22 @@
+terraform {
+  required_providers {
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "=3.0.1"
+    }
+  }
+}
+
 provider "azurerm" {
   features {
   }
 }
 
-# Just to silence workspace error =)
-variable "ACR_ADMIN_PASSWORD" {
-  type = string
-}
-
 locals {
-  location = "eastus"
+  location = "eastus2"
   tags = {
-    environment       = "shared"
-    product           = "beershop"
+    environment = "shared"
+    product     = "beershop"
   }
 }
 
@@ -30,11 +34,12 @@ resource "azurerm_container_registry" "default" {
   sku                 = "Basic"
   admin_enabled       = true
   tags = {
-    environment       = "shared"
-    product           = "beershop"
+    environment = "shared"
+    product     = "beershop"
   }
 }
 
 output "acr_admin_password" {
-  value = azurerm_container_registry.default.admin_password
+  value     = azurerm_container_registry.default.admin_password
+  sensitive = true
 }

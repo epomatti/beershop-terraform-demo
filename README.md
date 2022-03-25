@@ -12,11 +12,11 @@ This demo is composed of three main modules:
 
 The following diagram shows all the resources provisioned with Terraform, plus an ACR for Docker images.
 
-<img src="_docs/demo.png" width="440"> </img>
+<img src=".docs/demo.png" width="440"> </img>
 
 ## Local Development
 
-<u>Requirements</u>: Docker, Azure Functions Core Tools, Node, TypeScript, .NET Core 3.1
+<u>Requirements</u>: Docker, Azure Functions Core Tools, Node, TypeScript, .NET Core 6.
 
 ### Database
 
@@ -47,38 +47,52 @@ Create the `local.settings.json` from the template and manually enter the Servic
 Start the function
 
 ```sh
-npm i
-npm start
+yarn install
+yarn start
 ```
 
 Don't forget to run the dotnet app first for the required migrations.
 
-### Infrastructure
-
-The infrastructure also has three modules:
-
-- **Enterprise** - Creates the workspaces ("pipelines") in Terraform Cloud
-- **Main** - The resources of the solution
-- **Shared** - Resources shared accross main environments (dev, qa, prod, etc)
-
-Use Terraform Cloud with [infrastructure/enterprise](infrastructure/enterprise) module as a workspace. It implements the Terraform Enteprise Provider to automatically build the workspaces.
-
-You may also use the Terraform CLI or any other CI/CD tool.
 
 #### Manual steps
 
-1. Add Log Analytics to the App Service
+Add Log Analytics to the App Service
 
-### New Environments
+## Terraform
 
-If the shared environment is recreated, add the new `ACR_ADMIN_PASSWORD` to the enterprise workspace.
+The infrastructure also has three modules:
 
-1. Add the matching database password to the enteprise workspace
-3. Add branch, worksking
+- **Enterprise (Terraform Cloud)** - Creates the workspaces ("pipelines") in Terraform Cloud
+- **Main** - The resources of the solution
+- **Shared** - Resources shared across main environments (dev, qa, prod, etc)
 
+First `cd` into the `intfrastructure` directory:
+
+```sh
+cd infrastructure
+```
+
+Create the shared resources that can be used across multiple applications:
+
+```sh
+terraform -chdir=shared init
+terraform -chdir=shared plan
+terraform -chdir=shared apply -auto-approve
+```
+
+Create the app infrastructure:
+
+```sh
+# create the sample tfvars & add edit with the secret values
+cp config/main-example.tfvars main/main.tfvars
+
+# execute terraform
+terraform -chdir=main init
+terraform -chdir=main plan -var-file='main.tfvars'
+terraform -chdir=main apply -var-file='main.tfvars' -auto-approve
+```
 
 ## Extra
 
-Checkout my [slide deck](https://slides.com/epomatti/terraform) about Terraform.
-
 Also [Azure Functions Bindings](https://docs.microsoft.com/en-us/azure/azure-functions/functions-bindings-service-bus-trigger?tabs=csharp) proved very useful.
+https://jhooq.com/terraform-variable-and-tfvars-file/
