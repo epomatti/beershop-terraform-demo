@@ -12,7 +12,7 @@ This demo is composed of three main modules:
 
 The following diagram shows all the resources provisioned with Terraform, plus an ACR for Docker images.
 
-<img src=".docs/demo.png" width="440"> </img>
+<img src=".docs/demo.png" width="500"> </img>
 
 ## Local Development
 
@@ -53,6 +53,11 @@ yarn start
 
 Don't forget to run the dotnet app first for the required migrations.
 
+To trust local certificates:
+
+```sh
+dotnet dev-certs https --trust
+```
 
 #### Manual steps
 
